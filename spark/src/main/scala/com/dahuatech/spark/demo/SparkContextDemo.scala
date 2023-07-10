@@ -34,7 +34,7 @@ object SparkContextDemo {
     // sparkSession.sql(
     //   """
     //     |select * from global_temp.demo
-    //     |""".stripMargin).show()
+    //     |""".stripMargin).show()k
     // sparkSession.newSession()
     // sparkSession.newSession().sql(
     //   """

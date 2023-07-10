@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- zk集群IP -->
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>hadoop101,hadoop102,hadoop103</value>
+    </property>
+    <!-- zk会话超时 默认90s -->
+    <property>
+        <name>zookeeper.session.timeout</name>
+        <value>90000</value>
+    </property>
+    <!-- hbase客户端重试次数 -->
+    <property>
+        <name>hbase.client.retries.number</name>
+        <value>45</value>
+    </property>
+    <!-- hbase客户端重试间隔 -->
+    <property>
+        <name>hbase.client.pause</name>
+        <value>100</value>
+    </property>
+    <!-- 并发读写handler数 请求比较多建议调大 调整的单个regionserver的能力 -->
+    <property>
+        <name>hbase.regionserver.handler.count</name>
+        <value>30</value>
+    </property>
+    <!-- 大合并周期 默认7天 -->
+    <property>
+        <name>hbase.hregion.majorcompaction</name>
+        <value>604800000</value>
+    </property>
+    <!-- hfile读缓存 -->
+    <property>
+        <name>hfile.block.cache.size</name>
+        <value>0.4</value>
+    </property>
+</configuration>

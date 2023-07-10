@@ -82,8 +82,8 @@
       </FilePath>
     </option>
     <method v="2">
-      <option name="SftpSparkFileUpload" enabled="true" />
       <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/spark/pom.xml" goal="clean package" />
+      <option name="SftpSparkFileUpload" enabled="true" />
     </method>
   </configuration>
 </component>

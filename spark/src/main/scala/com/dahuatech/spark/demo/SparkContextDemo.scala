@@ -28,7 +28,7 @@ object SparkContextDemo {
 
   def main(args: Array[String]): Unit = {
     val rdd: RDD[(Int, Int)] = sparkContext.makeRDD(Array((1, 2), 3 -> 4))
-    val df: DataFrame = rdd.toDF("a", "b")
+    val df: DataFrame = rdd.toDF("a", "b", "c")
     df.show()
     // df.createOrReplaceGlobalTempView("demo")
     // sparkSession.sql(

@@ -1,5 +1,8 @@
 package com.dahuatech.test.demo
 
+import java.lang.reflect.Field
+import scala.collection.mutable
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech</p>
@@ -15,7 +18,10 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-
+    // val buffer = "1,2,3".split(",")
+    // println(buffer)
+    // val seq = Seq("2").toBuffer
+    // println((buffer.diff(seq)).toBuffer)
 
     // val runtime: Runtime = Runtime.getRuntime
     // val process: Process = runtime.exec(System.getenv("PWD").concat("/a.txt"))

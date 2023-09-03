@@ -14,9 +14,12 @@ import org.apache.spark.{SparkConf, SparkContext}
  * @version 1.0.0
  */
 object SparkUtil {
-  val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName(getClass.getName)
+  def getLocalSparkSession(): SparkSession = SparkSession.builder().config(new SparkConf().setMaster("local[*]").setAppName(getClass.getName)).getOrCreate()
 
-  def getSparkContext(): SparkContext = new SparkContext(sparkConf)
-
-  def getSparkSession(): SparkSession = SparkSession.builder().config(sparkConf).getOrCreate()
+  def getSparkSession(): SparkSession = {
+    val sparkConf: SparkConf = new SparkConf().setAppName(getClass.getName)
+    SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
+    // .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    // .registerKryoClasses(Array(classOf[FileWriter]))
+  }
 }

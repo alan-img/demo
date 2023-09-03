@@ -292,9 +292,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven.jar.plugin.version}</version>
                 <configuration>
-                    <excludes>
-                        <exclude></exclude>
-                    </excludes>
+                    <excludes></excludes>
+                    <includes></includes>
                 </configuration>
             </plugin>
             <plugin>
@@ -331,80 +330,6 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.scalastyle</groupId>
-                <artifactId>scalastyle-maven-plugin</artifactId>
-                <version>${maven.scalastyle.plugin.version}</version>
-                <configuration>
-                    <verbose>false</verbose>
-                    <failOnViolation>true</failOnViolation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <failOnWarning>false</failOnWarning>
-                    <sourceDirectory>${project.basedir}/src/main/scala</sourceDirectory>
-                    <testSourceDirectory>${project.basedir}/src/test/scala</testSourceDirectory>
-                    <configLocation>scalastyle-config.xml</configLocation>
-                    <outputFile>${project.build.directory}/scalastyle-output.xml</outputFile>
-                    <outputEncoding>UTF-8</outputEncoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>${maven.spotless.plugin.version}</version>
-                <configuration>
-                    <upToDateChecking>
-                        <enabled>true</enabled>
-                    </upToDateChecking>
-                    <java>
-                        <includes>
-                            <include>src/main/java/com/fc/service/*.java</include>
-                            <include>src/test/java/com/fc/service/*.java</include>
-                        </includes>
-                        <googleJavaFormat>
-                            <version>${spotless.java.googlejavaformat.version}</version>
-                            <style>GOOGLE</style>
-                        </googleJavaFormat>
-                        <removeUnusedImports></removeUnusedImports>
-                    </java>
-                    <scala>
-                        <includes>
-                            <include>src/main/scala/**/*.scala</include>
-                            <include>src/test/scala/**/*.scala</include>
-                            <include>src/test/gen/scala/**/*.scala</include>
-                        </includes>
-                        <!-- <scalafmt> -->
-                        <!--     <version>${spotless.scala.scalafmt.version}</version> -->
-                        <!--     <scalaMajorVersion>2.12</scalaMajorVersion> -->
-                        <!--     <file>${maven.multiModuleProjectDirectory}/.scalafmt.conf</file> -->
-                        <!-- </scalafmt> -->
-                    </scala>
-                    <pom>
-                        <includes>
-                            <include>pom.xml</include>
-                        </includes>
-                        <sortPom>
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <expandEmptyElements>true</expandEmptyElements>
-                            <indentSchemaLocation>true</indentSchemaLocation>
-                            <nrOfIndentSpace>4</nrOfIndentSpace>
-                        </sortPom>
-                    </pom>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -1,8 +1,11 @@
 package com.dahuatech.spark.demo
 
+import com.dahuatech.spark.utils.SparkUtil
+import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.hive.test.TestHive.sparkContext
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * <p>projectName: demo</p>
@@ -16,32 +19,23 @@ import org.apache.spark.{SparkConf, SparkContext}
  */
 
 object SparkContextDemo {
-  val sparkConf: SparkConf = new SparkConf().setAppName(getClass.getName)
-  // .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-  // .registerKryoClasses(Array(classOf[FileWriter]))
-
-  private val sparkContext: SparkContext = new SparkContext(sparkConf)
-
-  private val sparkSession: SparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
-
-  import sparkSession.implicits._
+  val logger: Logger = LoggerFactory.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {
-    val rdd: RDD[(Int, Int)] = sparkContext.makeRDD(Array((1, 2), 3 -> 4))
-    val df: DataFrame = rdd.toDF("a", "b", "c")
-    df.show()
-    // df.createOrReplaceGlobalTempView("demo")
-    // sparkSession.sql(
-    //   """
-    //     |select * from global_temp.demo
-    //     |""".stripMargin).show()k
-    // sparkSession.newSession()
-    // sparkSession.newSession().sql(
-    //   """
-    //     |select * from global_temp.demo
-    //     |""".stripMargin).show()
-    // df.select($"a" + 10, 'b).show()
-    //
-    // val ds: Dataset[(Int, Int)] = rdd.toDS()
+    val sparkSession: SparkSession = SparkUtil.getSparkSession()
+    val sparkContext: SparkContext = sparkSession.sparkContext
+    import sparkSession.implicits._
+
+    for (i <- 0 until 20) {
+      logger.info(s"driver log test ${i}...")
+    }
+    val rdd: RDD[Long] = sparkContext.range(0, 1000000, 1)
+    val value: RDD[Long] = rdd.map {
+      x =>
+        println(x)
+        logger.info(s"driver log test...")
+        x + 1
+    }
+    value.collect()
   }
 }

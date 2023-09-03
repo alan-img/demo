@@ -26,7 +26,7 @@ import scala.collection.mutable
 object SparkStreamDemo {
   def main(args: Array[String]): Unit = {
 
-    val streamingContext = new StreamingContext(SparkUtil.sparkConf, Durations.seconds(3))
+    val streamingContext = new StreamingContext(SparkUtil.getLocalSparkSession().sparkContext.getConf, Durations.seconds(3))
 
     val kafkaDStream: InputDStream[ConsumerRecord[String, String]] = KafkaUtils.createDirectStream(
       streamingContext,

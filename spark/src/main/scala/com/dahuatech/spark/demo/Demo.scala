@@ -26,7 +26,7 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    val sparkContext: SparkContext = SparkUtil.getSparkContext
+    val sparkContext: SparkContext = SparkUtil.getLocalSparkSession().sparkContext
     val list: List[Int] = List(1, 2, 3, 4)
 
     val myPartitioner: SingleRecordPartitioner = SingleRecordPartitioner(4)

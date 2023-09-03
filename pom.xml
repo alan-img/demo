@@ -293,7 +293,6 @@
                 <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <excludes></excludes>
-                    <includes></includes>
                 </configuration>
             </plugin>
             <plugin>

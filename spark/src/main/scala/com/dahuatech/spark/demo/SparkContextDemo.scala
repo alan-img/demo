@@ -29,7 +29,7 @@ object SparkContextDemo {
     for (i <- 0 until 20) {
       logger.info(s"driver log test ${i}...")
     }
-    val rdd: RDD[Long] = sparkContext.range(0, 1000000, 1)
+    val rdd: RDD[Long] = sparkContext.range(0, 10, 1)
     val value: RDD[Long] = rdd.map {
       x =>
         println(x)

@@ -26,9 +26,7 @@ import scala.sys.SystemProperties
  * @since JDK8.0
  * @version 1.0.0
  */
-class CustomizeMap[K, V] extends mutable.HashMap[K, V] {
 
-}
 object Demo {
   private val logger: Logger = LoggerFactory.getLogger(getClass)
 

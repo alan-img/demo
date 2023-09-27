@@ -17,20 +17,33 @@ import java.nio.charset.StandardCharsets
  */
 /*
  *  使用建议:
- *    1.JSON字符串转为JSON对象
- *      1.1 字符串解析为对象后在打印对象时都会丢掉null字段 这个字段其实已经是这个对象的一个属性了 只是打印时忽略了null字段而已
- *      转为字符串时设置SerializerFeature.WriteMapNullValue是可以打印出来的
- *      1.2 解析对象时建议使用使用JSON.parseObject()
- *      1.3 解析数组时使用JSON.parseArray(jsonObj, classOf[JSONObject])
- *      不加classOf[JSONObject]返回的是JSONArray类型 优先加classOf[JSONObject]使用更清晰
- *      1.4 如果数组内的对象不是JSON而是普通类型如String 使用JSON.parseArray(jsonObj, classOf[String])
- *    2.JSON对象转为JSON字符串
- *       2.1 不保留null属性直接jsonObj.toString
- *       2.2 保留null属性使用JSON.toJSONString(jsonObj, SerializerFeature.WriteMapNullValue)
- *       2.3 JSON.toJSONString(jsonObj)在scala中是错误用法 在java中正常
+ *    1.JSON字符串转为JSON对象或JSON数组
+ *      1.1 解析对象时建议使用使用JSON.parseObject()
+ *      1.2 解析数组时使用JSON.parseArray(jsonObj, classOf[JSONObject])
+ *            1.2.1 建议优先加classOf[JSONObject]使用更清晰
+ *            1.2.2 如果数组内的对象不是JSON对象而是普通类型如String 使用JSON.parseArray(jsonObj, classOf[String])
+ *            1.2.3 不加classOf[JSONObject] 返回的是JSONArray类型 不推荐使用
+ *
+ *    2.JSON对象或JSON数组转为JSON字符串
+ *      2.1 JSON字符串解析为JSON对象后在打印对象时都会丢掉"null"字段
+ *            2.1.1 这个字段其实已经是这个对象的一个属性了 get时拿到的"null"值实际上就是它 只是打印时忽略了"null"字段而已
+ *            2.1.2 转为字符串时设置SerializerFeature.WriteMapNullValue是可以打印出来的
+ *      2.2 保留null属性使用JSON.toJSONString(jsonObj, SerializerFeature.WriteMapNullValue)
+ *            2.2.1 这个在scala和java中均可使用 推荐使用这种方式
+ *      2.3 不保留null字段 (很少使用，一般不推荐不保留null字段)
+ *            2.3.1 在java代码中: JSON.toJSONString(jsonObj)
+ *            2.3.2 在Scala代码中: jsonObject.toJSONString
+ *
  *    3.将Java对象转为JSON对象
- *       3.1 使用JSON.toJSON(javaObj)
- *        JSONObject jsonObj = (JSONObject)JSON.toJSON(javaObj);
+ *            3.1 使用JSON.toJSON(javaObj)
+ *              JSONObject jsonObj = (JSONObject)JSON.toJSON(javaObj);
+ *
+ *    4.将Java对象转为JSON字符串
+ *            4.1 使用JSON.toJSONString(javaObj))
+ *              String jsonString = JSON.toJSONString(javaObj, SerializerFeature.WriteMapNullValue))
+ *    5.将JSON字符串转为Java对象
+ *            5.1 使用JSON.parseObject(jsonString, classOf[Human])
+ *              Human human = JSON.parseObject(jsonString, classOf[Human])
  */
 object JSONUtil {
   private val logger: Logger = LoggerFactory.getLogger(getClass)

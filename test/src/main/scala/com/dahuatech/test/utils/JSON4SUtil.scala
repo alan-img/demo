@@ -1,10 +1,7 @@
 package com.dahuatech.test.utils
 
-import com.dahuatech.test.bean.FaceRecord
 import org.json4s.Formats
 import org.json4s.native.Serialization
-import org.junit.Test
-import org.junit.experimental.theories.suppliers.TestedOn
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -21,20 +18,12 @@ import scala.collection.mutable.ArrayBuffer
 object JSON4SUtil {
   implicit val formats = org.json4s.DefaultFormats
 
+  // 将样例类对象转为json字符串
   def toJSONString(obj: Object): String = Serialization.write(obj)
 
+  // 将json字符串转为样例类对象
   def parseObject[T](jsonString: String, clazz: Class[T])(implicit formats: Formats, mf: Manifest[T]): T = Serialization.read[T](jsonString)
 
+  // 将json字符串转为样例类对象数组
   def parseArray[T](jsonString: String, clazz: Class[T])(implicit formats: Formats, mf: Manifest[T]): ArrayBuffer[T] = Serialization.read[ArrayBuffer[T]](jsonString)
-
-  def main(args: Array[String]): Unit = {
-    val faceRecord: FaceRecord = FaceRecord(101, Array(1.2f, 1.4f), "alan")
-    println(JSON4SUtil.toJSONString(faceRecord))
-
-    val record: FaceRecord = JSON4SUtil.parseObject("{\"name\":\"jack\",\"age\":23}", classOf[FaceRecord])
-    println(record)
-
-    val record1: ArrayBuffer[FaceRecord] = JSON4SUtil.parseArray("[{\"name\":\"jack\",\"age\":23}, {\"name\":\"alan\",\"age\":24}]", classOf[FaceRecord])
-    println(record1)
-  }
 }

@@ -3,6 +3,8 @@ package com.dahuatech.okhttp.demo
 import com.dahuatech.okhttp.utils.OkHttpClientUtil
 import com.squareup.okhttp.{MediaType, OkHttpClient, Request, RequestBody, Response, ResponseBody}
 
+import java.util.concurrent.TimeUnit
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.demo</p>
@@ -37,5 +39,25 @@ object Demo {
     println(response.code())
     println(response.isSuccessful)
     println(responseBody.string())
+  }
+
+  /**
+   * 发送请求
+   *
+   * @return
+   */
+  def sendRequest(): Response = {
+
+    val okHttpClient: OkHttpClient = OkHttpClientUtil.getOkHttpClient
+    val requestBody: RequestBody = RequestBody.create(MediaType.parse(mediaType), "[{\"channel\": \"Fw61LVxMA1BHNH5LQAU3TQ\", \"gpX\": 120.1111, \"gpY\": 30.222}]")
+    val request: Request = new Request.Builder()
+      .url("http://localhost:8888/time/space/file")
+      .get()
+      .post(requestBody)
+      .build()
+
+    TimeUnit.SECONDS.sleep(5)
+
+    okHttpClient.newCall(request).execute()
   }
 }

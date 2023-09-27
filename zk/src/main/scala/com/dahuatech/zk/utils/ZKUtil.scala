@@ -27,7 +27,7 @@ object ZKUtil {
     .connectString("hdp-zookeeper-hdp-zookeeper.cloudspace.svc.cluster.local:2181")
     .sessionTimeoutMs(3000)
     .connectionTimeoutMs(1500)
-    .retryPolicy(new RetryNTimes(1, 1000))
+    .retryPolicy(new RetryNTimes(3, 3000))
     .build()
 
   // 必须先启动 CuratorFramework连接对象才可以使用

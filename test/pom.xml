@@ -16,6 +16,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.carrotsearch</groupId>
+            <artifactId>java-sizeof</artifactId>
+            <version>0.0.5</version>
+        </dependency>
         <!-- 日志框架根据需要可选 [log4j] [logback] [log4j2] 默认使用log4j -->
         <dependency>
             <groupId>org.slf4j</groupId>

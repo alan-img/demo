@@ -1,5 +1,10 @@
 package com.dahuatech.zk.utils
 
+import com.dahuatech.zk.utils.ZKUtil.curatorFramework
+import org.apache.curator.framework.CuratorFramework
+import org.apache.curator.framework.state.{ConnectionState, ConnectionStateListener}
+import org.apache.zookeeper.KeeperException
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.zk.utils</p>
@@ -14,5 +19,10 @@ package com.dahuatech.zk.utils
 object Demo {
   def main(args: Array[String]): Unit = {
     println(ZKUtil.curatorFramework)
+    try {
+      curatorFramework.delete().forPath("/aaaaaaaaaaa")
+    } catch {
+      case exception: KeeperException.NoNodeException => println("alan")
+    }
   }
 }

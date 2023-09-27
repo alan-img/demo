@@ -1,7 +1,20 @@
 package com.dahuatech.test.demo
 
-import java.lang.reflect.Field
-import scala.collection.mutable
+import com.alibaba.fastjson.serializer.SerializerFeature
+import com.alibaba.fastjson.{JSON, JSONObject}
+import com.carrotsearch.sizeof.RamUsageEstimator
+import com.dahuatech.test.bean.Person
+import com.dahuatech.test.utils.JSON4SUtil
+import javafx.beans.binding.ListBinding
+import org.slf4j.{Logger, LoggerFactory}
+
+import java.net.InetAddress
+import java.util
+import java.util.UUID
+import java.util.concurrent.{CountDownLatch, ExecutorService, Executors}
+import scala.collection.{immutable, mutable}
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.sys.SystemProperties
 
 /**
  * <p>projectName: demo</p>
@@ -13,10 +26,248 @@ import scala.collection.mutable
  * @since JDK8.0
  * @version 1.0.0
  */
+class CustomizeMap[K, V] extends mutable.HashMap[K, V] {
+
+}
 object Demo {
+  private val logger: Logger = LoggerFactory.getLogger(getClass)
+
   implicit val formats = org.json4s.DefaultFormats
 
+
+
   def main(args: Array[String]): Unit = {
+
+    val arr1: ArrayBuffer[Int] = ArrayBuffer(1, 2, 3)
+    val arr2: ArrayBuffer[String] = ArrayBuffer("1", "2", "3", "4")
+    println(arr1.zip(arr2))
+
+    // val map: Map[Int, Int] = Map(1 -> 2)
+    //
+    // println(map(1))
+
+    // println("alan".split(",").toBuffer)
+
+    // val arrayBuffer = List(1, 2, 3)
+    // arrayBuffer(0) = 10
+    // arrayBuffer.update(0, 100)
+    // val i: Int = arrayBuffer.apply(0)
+    // println(i)
+    // println(arrayBuffer(0))
+
+    // val value: CustomizeMap[Int, Int] = new CustomizeMap[Int, Int]()
+    //
+    // value += 1 -> 2
+    // println(value)
+
+    // val arrayBuffer: ArrayBuffer[Int] = ArrayBuffer(1, 2, 3)
+    //
+    // arrayBuffer.foreach{x: Int => println(x)}
+
+    // val arrayBuffer: ArrayBuffer[Int] = ArrayBuffer(1, 2, 3, 4, 7, 6, 5)
+    // println(arrayBuffer.sortWith((x, y) => x > y))
+    // println(arrayBuffer.sorted)
+    // println(arrayBuffer.sortBy(x => x))
+
+    // val str: String = UUID.randomUUID().toString.replace("-", "")
+    // println(str)
+
+
+    // val arrayBuffer: ListBuffer[Int] = ListBuffer.empty[Int]
+    // val service: ExecutorService = Executors.newFixedThreadPool(10)
+    //
+    // val countDownLatch = new CountDownLatch(10)
+    // for (i <- 0 until 10) {
+    //   service.execute(new Runnable {
+    //     override def run(): Unit = {
+    //       try {
+    //         for (j <- 0 until 10) {
+    //           // ArrayBuffer.synchronized(arrayBuffer.append(j))
+    //           arrayBuffer.append(j)
+    //         }
+    //       } finally {
+    //         countDownLatch.countDown()
+    //       }
+    //     }
+    //   })
+    // }
+    // countDownLatch.await()
+    //
+    // println(arrayBuffer.length)
+    // service.shutdown()
+
+    // val ints: Array[Int] = Array(1, 2, 3)
+    // val list1: List[Int] = List(1, 2, 3)
+    // val ints1: Array[Int] = ints.map(x => x)
+    // val ints2: List[Int] = list1.map(x => x)
+
+    // val list = new util.ArrayList[String]()
+    // list.add("a")
+    // list.add("b")
+    //
+    // println(list)
+
+    // object Enum extends Enumeration {
+    //   val RED = Value(1, "red")
+    //   val BLUE = Value(2, "blue")
+    //   val YELLOW = Value(3, "yellow")
+    // }
+
+    // println(Enum.RED)
+    // println(Enum.RED.id)
+    // Enum.values.foreach(x => println(x.id))
+    // Enum.values.foreach(x => println(x))
+    // val values: Enum.ValueSet = Enum.values
+    // println(values)
+    // val set: Enum.ValueSet.type = Enum.ValueSet
+    // println(set)
+
+    // val a = new A("alan")
+    // a.display(10)
+    // println(a.age)
+    // println(A.b)
+
+    // val map: Map[Int, Array[String]] = Map((1, Array("a", "b", "c")), 2 -> Array("a", "b", "c"))
+
+    // val ints: Seq[Int] = Seq(1, 2, 3, 4).take(10)
+    // println(ints)
+
+    // var map: Map[Int, Int] = Map[Int, Int]()
+    // map += (1 -> 2)
+    // map += ((1, 20))
+    // map.foreach(
+    //   (kv: (Int, Int)) => println(kv._1, kv._2)
+    // )
+
+    // println(1.hashCode())
+    // println(-1.hashCode())
+    // println("1".hashCode)
+    // println("-1".hashCode)
+
+    // println(Integer.MIN_VALUE)
+    // println(Math.abs(Integer.MIN_VALUE))
+    // println(Integer.MIN_VALUE.abs)
+    // println(-12 % 3)
+
+    // val arrayBuffer: ArrayBuffer[Int] = ArrayBuffer(1, 2, 3, 4, 5, 6, 7, 8)
+    // val indices: Range = arrayBuffer.indices
+    // println(indices)
+    //
+    // val ints: ArrayBuffer[Int] = arrayBuffer.slice(0, 3)
+    // println(ints)
+
+    // val map: mutable.Map[Int, Int] = mutable.Map[Int, Int]() + ((10, 20))
+    // map(30) += 40
+    // println(map)
+
+    // map += ((1, 2))
+    // map += 3 -> 4
+    // var map1: Map[Int, Int] = Map[Int, Int]() + ((10, 20))
+    // map1 += ((1, 2))
+    // map1 += 3 -> 4
+    // println(map)
+    // println(map1)
+
+    // println(logger.getClass)
+    // println(logger.getClass.getName)
+    // println(logger.getClass.getSimpleName)
+
+    // val arr: ArrayBuffer[Int] = ArrayBuffer[Int]()
+    // arr.append(0)
+    // arr.append(1)
+    // arr.append(2)
+    //
+    // println(RamUsageEstimator.sizeOf(arr))
+    // println(RamUsageEstimator.sizeOf(arr) / arr.size)
+
+    // val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
+    // threadPool.execute(new Runnable {
+    //   override def run(): Unit = {
+    //     throw new Exception("alan")
+    //   }
+    // })
+    // threadPool.shutdown()
+    //
+    // println("sdfasdfasdfasdfasdfSd")
+
+    // val jsonObject: JSONObject = JSON.parseObject(
+    //   """
+    //     |{"name": "alan", "age"
+    //     |""".stripMargin)
+
+    // try {
+    //   val a = 1 / 0
+    // } catch {
+    //   case exp: Exception =>
+    //     logger.error("output test", exp)
+    //     throw new RuntimeException("output test1")
+    // }
+
+
+    // println(InetAddress.getLocalHost)
+    // println(InetAddress.getLocalHost.getHostAddress)
+    // println(System.getProperty("os.name"))
+    // println(System.getenv("JAVA_HOME"))
+    // println(getClass)
+    // println(getClass.getName)
+    // println(getClass.getSimpleName)
+
+    // println("alan")
+
+    // val opt: Option[Int] = if (false) Some(10) else None
+    // println(opt.get)
+    // println(opt.getOrElse(20))
+
+    // var map: Map[Int, Int] = Map(1111 -> 1111)
+    // map += ((1, 2))
+    // map += (2 -> 3)
+    // println(map)
+
+    // println(ArrayBuffer(1, 1, 3).map(x => (x, x)).toMap[Int, Int])
+
+    // val str =
+    //   """
+    //     |{"name": "jack", "arr": [{"name": "tom", "age": 23}, {"name": "adam", "age": 24}]}
+    //     |""".stripMargin
+    //
+    // val obj: JSONObject = JSON.parseObject(str, classOf[JSONObject])
+    // println(obj)
+    // println(obj.getObject("arr", classOf[Array[JSONObject]]).toBuffer)
+
+    // val obj = new JSONObject()
+    // obj.put("name", "alan")
+    // obj.put("age", 23)
+    // obj.put("addr", null)
+
+    // val jsonObj = JSON.toJSON(person).asInstanceOf[JSONObject]
+    // println(jsonObj.toJSONString)
+
+    // case class Person()
+    //
+    // val p = Person()
+    //
+    // println(p.getClass)
+    // println(classOf[Person])
+    // Class.forName("Person")
+    // ClassLoader.getSystemClassLoader.loadClass("Person")
+
+    // println(logger.isErrorEnabled())
+    // println(logger.isWarnEnabled())
+    // println(logger.isInfoEnabled())
+    // println(logger.isDebugEnabled())
+
+    // val s = "{\"ageGroup\":6}"
+    // if (!s.contains("ageGroup")) {
+    //   println("alan")
+    // } else {
+    //   println("jack")
+    // }
+
+    // val obj = new  JSONObject()
+    // obj.put("alan", "")
+    // println(obj.toJSONString)
+
+    // val arr: ListBuffer[Int] = ListBuffer(1, 2, 3, 4, 5, 6)
 
     // val buffer = "1,2,3".split(",")
     // println(buffer)
@@ -327,5 +578,5 @@ object Demo {
     // System.out.println(JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue))
     //
     // println(JSON.parseObject(JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue), classOf[Person]))
-  }
+    }
 }

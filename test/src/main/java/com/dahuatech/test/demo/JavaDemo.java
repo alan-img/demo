@@ -2,6 +2,10 @@ package com.dahuatech.test.demo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.dahuatech.test.bean.FaceDossier;
+import com.dahuatech.test.bean.Human;
+import com.dahuatech.test.exception.DemoException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -16,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -34,7 +39,81 @@ public class JavaDemo {
 
     private static Logger logger = LoggerFactory.getLogger(JavaDemo.class);
 
+    public static void show() {
+        throw new DemoException("exception msg", 10);
+    }
+
     public static void main(String[] args) throws InterruptedException {
+
+        // Human alan = new Human("alan", 23);
+        // System.out.println(alan);
+        // JSONObject obj = (JSONObject)JSON.toJSON(alan);
+        // System.out.println(obj);
+        // Human h = (Human)JSON.toJSON(obj);
+        // System.out.println(h);
+
+        // ArrayList<Integer> list = new ArrayList<>();
+        // ArrayList<Integer> list1 = new ArrayList<>();
+        // list1.add(1);
+        // list1.add(3);
+        //
+        // list.add(1);
+        // list.add(2);
+        // list.add(3);
+        //
+        // list.removeIf(integer -> list1.contains(integer));
+        //
+        // System.out.println(list);
+
+        // ArrayList<String> list = new ArrayList<>();
+        // list.add("1001");
+        //
+        // List<FaceDossier> faceDossierList = new ArrayList<>();
+        // faceDossierList.add(new FaceDossier(100, 10001, 1000, "alan", "alan ", "al", 1000L, "alan", "jack", "mem", "1001", "ele"));
+        //
+        // System.out.println(faceDossierList);
+        //
+        // faceDossierList = faceDossierList.stream().filter(x -> !list.contains(x.getDossierId())).collect(Collectors.toList());
+        // System.out.println(faceDossierList);
+
+        // Human human = new Human("alan", 23);
+        // String jsonString = JSON.toJSONString(human, SerializerFeature.WriteMapNullValue);
+        // System.out.println("jsonString = " + jsonString);
+        // Human human1 = JSON.parseObject(jsonString, Human.class);
+        // System.out.println(human1);
+
+        // Human human = new Human("alan", 23);
+        // System.out.println(human);
+        // human.display();
+        // Human.HumanBuilder builder = Human.builder();
+        // System.out.println(builder.name("alan").age(23).name("jack").toString());
+        // Human alna = Human.builder().name("alna").age(10).build()
+        // Human.HumanBuilder alna = Human.builder().name("alna").age(10);
+        // System.out.println(alna);
+
+        // try {
+        //     show();
+        // } catch (Exception e) {
+        //     logger.error("发生自定义异常", e);
+        // }
+
+        // ArrayList<Integer> list = new ArrayList<>();
+        // for (int i = 10; i > 0; i--) {
+        //     list.add(i);
+        // }
+        // for (int i = 10; i > 0; i--) {
+        //     list.add(i);
+        // }
+        //
+        // List<Integer> list1 = list.stream().distinct().collect(Collectors.toList());
+        // System.out.println(list1);
+
+        // Human human = new Human("alan", 23);
+        // System.out.println(JSON.toJSONString(human));
+        // System.out.println(JSON.toJSONString(human));
+        //
+        // JSONObject jsonObj = (JSONObject)JSON.toJSON(human);
+        // System.out.println(jsonObj);
 
         // HashMap<Integer, Integer> map = new HashMap<>();
         // map.put(1, 2);

@@ -45,9 +45,9 @@ object SparkContextDemo {
   }
 
   def main(args: Array[String]): Unit = {
-    sparkSession.sparkContext.setCheckpointDir("./")
     val originRDD: RDD[Int] = sparkSession.sparkContext.makeRDD(Seq(1, 2, 3, 4, 5, 6), 2)
 
+    showPartition(originRDD)
 
     // val originRDD: RDD[(String, Int)] = sparkSession.sparkContext.makeRDD(Seq(("a", 1), ("b", 2), ("a", 3), ("b", 4), ("c", 6), ("c", 5)), 2)
     // showPartition(originRDD)

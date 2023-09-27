@@ -28,7 +28,7 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object SparkStreamDemo {
   def main(args: Array[String]): Unit = {
-    val streamingContext = new StreamingContext(SparkUtil.sparkConf, Durations.seconds(3))
+    val streamingContext = new StreamingContext(SparkUtil.getLocalSparkSession().sparkContext, Durations.seconds(3))
 
     val receiverInputDStream: ReceiverInputDStream[String] = streamingContext.socketTextStream("10.12.162.2", 9999)
 

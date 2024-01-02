@@ -17,6 +17,7 @@ import scala.io.StdIn
  * @since JDK8.0
  * @version 1.0.0
  */
+class CustomizeMap[K, V] extends mutable.HashMap[K, V] {
 
 /*
 JVM参数：

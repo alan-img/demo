@@ -14,6 +14,8 @@ import scala.collection.JavaConversions._
 import scala.collection.immutable.{NumericRange, Stack}
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import com.dahuatech.spark.utils.SparkUtil.showPartition
+
 
 /**
  * <p>projectName: demo</p>
@@ -28,30 +30,18 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object SparkStreamDemo {
   def main(args: Array[String]): Unit = {
-    val streamingContext = new StreamingContext(SparkUtil.getLocalSparkSession().sparkContext, Durations.seconds(3))
+    val streamingContext = new StreamingContext(SparkUtil.getLocalSparkSession().sparkContext, Durations.seconds(5))
+    val receiverInputDStream: ReceiverInputDStream[String] = streamingContext.socketTextStream("hadoop104", 9999)
 
-    val receiverInputDStream: ReceiverInputDStream[String] = streamingContext.socketTextStream("10.12.162.2", 9999)
+    val stream: DStream[(String, String)] = receiverInputDStream.map((x: String) => (x, x))
+    stream.foreachRDD((rdd: RDD[(String, String)]) => {
+      println("alan")
+    })
 
-    val dStream: DStream[String] = receiverInputDStream.transform {
-      (rdd: RDD[String], time: Time) => {
-        println(rdd.getNumPartitions)
-        rdd
-      }
-    }
-
-    val stream: DStream[(String, ArrayBuffer[String])] = dStream.map((x: String) => (x, ArrayBuffer(x)))
-
-    // stream.foreachRDD {
-    //   rdd: RDD[(String, ArrayBuffer[String])] => {
-    //     rdd.foreachPartition {
-    //       kv: Iterator[(String, ArrayBuffer[String])] => println("compute....")
-    //     }
-    //   }
-    // }
-
-    val group: DStream[(String, Iterable[ArrayBuffer[String]])] = stream.groupByKeyAndWindow(Seconds(6), Seconds(6))
-
-    group.print()
+    val group: DStream[(String, Iterable[String])] = stream.groupByKeyAndWindow(Seconds(10), Seconds(10))
+    group.foreachRDD((rdd: RDD[(String, Iterable[String])]) => {
+      println("jack")
+    })
 
 
     streamingContext.start()

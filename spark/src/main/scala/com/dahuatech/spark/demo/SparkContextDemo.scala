@@ -1,5 +1,6 @@
 package com.dahuatech.spark.demo
 
+import com.dahuatech.spark.utils.SparkUtil.showPartition
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -28,15 +29,6 @@ object SparkContextDemo {
 
   private val sparkSession: SparkSession = SparkSession.builder().config(sparkConf).getOrCreate()
   // private val sparkContext: SparkContext = new SparkContext(sparkConf)
-
-  def showPartition[T](rdd: RDD[T]): Unit = {
-    println("start --<< " + rdd.getNumPartitions + " >>-- start")
-    rdd.foreachPartition(
-      iter => println("partitionId: " + TaskContext.getPartitionId() + " <--> " + iter.mkString(","))
-    )
-    println("end --<< " + rdd.getNumPartitions + " >>-- end")
-    println()
-  }
 
   case class MyPartitioner(partitionNum: Int) extends Partitioner {
     override def numPartitions: Int = partitionNum
@@ -80,6 +72,8 @@ object SparkContextDemo {
 
     // val partitionByRDD: RDD[(String, Int)] = originRDD.map((ab: (String, Int)) => (ab._2, ab._1)).partitionBy(MyPartitioner(2)).map((ab: (Int, String)) => (ab._2, ab._1))
     // showPartition(partitionByRDD)
+
+    showPartition(originRDD)
 
 
     // val mapRDD: RDD[Int] = originRDD.map(x => {

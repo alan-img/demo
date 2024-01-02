@@ -25,6 +25,9 @@
         <module>shell</module>
         <module>pool</module>
         <module>misc</module>
+        <module>mapreduce</module>
+        <module>hiveserver2</module>
+        <module>parquet</module>
     </modules>
     <name>demo project</name>
     <description>demo project for multiplex</description>
@@ -78,6 +81,8 @@
         <commons.collections.version>3.2.1</commons.collections.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <kafka.clients.version>2.4.1</kafka.clients.version>
+        <hive.jdbc.version>2.3.6</hive.jdbc.version>
+        <parquet.version>1.10.1</parquet.version>
     </properties>
 
     <dependencyManagement>
@@ -247,6 +252,21 @@
                         <groupId>org.slf4j</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.carrotsearch</groupId>
+                <artifactId>java-sizeof</artifactId>
+                <version>0.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hive</groupId>
+                <artifactId>hive-jdbc</artifactId>
+                <version>${hive.jdbc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.parquet</groupId>
+                <artifactId>parquet-avro</artifactId>
+                <version>${parquet.version}</version> <!-- 版本号可能需要根据你的需求进行调整 -->
             </dependency>
         </dependencies>
     </dependencyManagement>

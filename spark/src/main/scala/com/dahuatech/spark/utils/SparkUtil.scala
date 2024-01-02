@@ -1,7 +1,8 @@
 package com.dahuatech.spark.utils
 
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.{SparkConf, SparkContext, TaskContext}
 
 /**
  * <p>projectName: demo</p>
@@ -21,5 +22,14 @@ object SparkUtil {
     SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
     // .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     // .registerKryoClasses(Array(classOf[FileWriter]))
+  }
+
+  def showPartition[T](rdd: RDD[T]): Unit = {
+    println("start --<< " + rdd.getNumPartitions + " >>-- start")
+    rdd.foreachPartition(
+      iter => println("partitionId: " + TaskContext.getPartitionId() + " <--> " + iter.mkString(","))
+    )
+    println("end --<< " + rdd.getNumPartitions + " >>-- end")
+    println()
   }
 }

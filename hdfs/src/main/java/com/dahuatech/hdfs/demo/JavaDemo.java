@@ -23,7 +23,6 @@ public class JavaDemo {
     private static Logger logger = LoggerFactory.getLogger(JavaDemo.class);
 
     public static void main(String[] args) throws Exception {
-
         FileSystem fileSystem = FileSystem.get(URI.create("hdfs://hdp-hadoop-hdp-namenode-0.hdp-hadoop-hdp-namenode.cloudspace.svc.cluster.local/"), new Configuration());
         System.out.println(fileSystem);
         FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/"));

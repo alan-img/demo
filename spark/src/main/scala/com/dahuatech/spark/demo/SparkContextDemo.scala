@@ -12,6 +12,10 @@ import org.apache.spark.util.LongAccumulator
 import org.apache.spark.{Dependency, SparkConf, SparkContext, TaskContext}
 import org.slf4j.{Logger, LoggerFactory}
 
+import java.lang
+import java.util.concurrent.TimeUnit
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.spark.demo</p>
@@ -29,7 +33,10 @@ object SparkContextDemo {
 
   def main(args: Array[String]): Unit = {
     logger.info("start distribute calculate...")
-    val originRDD: RDD[java.lang.Long] = sparkSession.range(0, 10, 1).rdd
-    showPartition(originRDD)
+    val originRDD: RDD[java.lang.Long] = sparkSession.sparkContext.makeRDD(Seq.range(0L, 10L).map(_.asInstanceOf[lang.Long]), 5)
+    val originKeyValueRDD: RDD[(lang.Long, lang.Long)] = originRDD.map(x => (x, x))
+    val originListRDD: RDD[List[lang.Long]] = originRDD.map(x => List(x, x))
+
+
   }
 }

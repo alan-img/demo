@@ -65,7 +65,7 @@
     <option name="shellExecutor" value="/bin/bash" />
     <option name="sparkHome" value="/opt/mod/spark-3.0.0-bin-hadoop3.2" />
     <option name="sparkMonitoringDriverId" value="" />
-    <option name="sshConfigId" value="9ec11d8e-84f9-4cca-af5e-74e1ce517da2" />
+    <option name="sshConfigId" value="3b5ba337-756f-404e-af11-4d2f4898b3f6" />
     <option name="supervise" value="false" />
     <option name="targetDirectory">
       <FilePath>

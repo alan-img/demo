@@ -1,11 +1,6 @@
 package com.dahuatech.test.demo
 
-import com.carrotsearch.sizeof.RamUsageEstimator
 import org.slf4j.{Logger, LoggerFactory}
-import sun.nio.ch.DirectBuffer
-
-import java.nio.ByteBuffer
-import scala.io.StdIn
 
 /**
  * <p>projectName: demo</p>
@@ -17,7 +12,6 @@ import scala.io.StdIn
  * @since JDK8.0
  * @version 1.0.0
  */
-class CustomizeMap[K, V] extends mutable.HashMap[K, V] {
 
 /*
 JVM参数：

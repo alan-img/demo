@@ -1,33 +1,14 @@
 package com.dahuatech.test.demo;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.dahuatech.test.bean.FaceDossier;
-import com.dahuatech.test.bean.Human;
-import com.dahuatech.test.bean.NamedThreadPool;
-import com.dahuatech.test.exception.DemoException;
-import lombok.val;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.collection.JavaConversions;
-import scala.collection.JavaConverters;
-import scala.collection.mutable.ArrayBuffer;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 
 /**
@@ -43,29 +24,38 @@ import java.util.stream.Collectors;
 
 public class JavaDemo {
     private static Logger logger = LoggerFactory.getLogger(JavaDemo.class);
-    private static ReentrantLock reentrantLock = new ReentrantLock();
-    private static boolean flag = true;
-    private static AtomicInteger balance = new AtomicInteger(10000);
 
     public static void main(String[] args) {
-        // test1();
+        try {
+            // 创建URL对象
+            URL url = new URL("http://misc:8888/person");
 
-        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(10, new NamedThreadPool("first"));
+            // 打开连接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-        // threadPool
+            // 设置请求方法为GET
+            connection.setRequestMethod("GET");
 
-        threadPool.shutdown();
-    }
+            // 发送请求
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
 
-    private static void test1() {
-        ExecutorService threadPool = Executors.newFixedThreadPool(10, new NamedThreadPool("first"));
+            // 读取响应内容
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
 
-        for (int i = 0; i < 10; i++) {
-            threadPool.submit(() -> {
-                logger.info("alan");
-            });
+            // 打印响应内容
+            System.out.println("Response Content: " + response);
+
+            // 关闭连接
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        threadPool.shutdown();
     }
 }

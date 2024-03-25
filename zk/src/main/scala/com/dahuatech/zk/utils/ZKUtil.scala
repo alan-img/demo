@@ -24,7 +24,7 @@ object ZKUtil {
   // 主要因为使用构建器方法可以提供显的方法设置相关配置
   val curatorFramework: CuratorFramework = CuratorFrameworkFactory.builder()
     // 连接字符串可提供多个并以"ip1:port1,ip2:port2,ip3:port3"的方式填写
-    .connectString("hdp-zookeeper-hdp-zookeeper.cloudspace.svc.cluster.local:2181")
+    .connectString("hadoop101:2181,hadoop102:2181,hadoop103:2181")
     .sessionTimeoutMs(3000)
     .connectionTimeoutMs(1500)
     .retryPolicy(new RetryNTimes(3, 3000))

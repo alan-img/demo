@@ -5,6 +5,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler
 
 import java.sql.{Connection, PreparedStatement, ResultSet}
 import java.util
+import java.util.concurrent.TimeUnit
 
 
 object Demo {
@@ -36,5 +37,7 @@ object Demo {
     for (elem <- 0 until len) {
       println(list.get(elem))
     }
+
+    TimeUnit.SECONDS.sleep(10000)
   }
 }

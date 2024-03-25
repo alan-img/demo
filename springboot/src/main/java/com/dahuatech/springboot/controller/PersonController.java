@@ -25,7 +25,7 @@ public class PersonController extends BaseController {
     @GetMapping("/person")
     public Person person() {
         log.info("person request arrive...");
-        int result = 1 / 0;
+        // int result = 1 / 0;
         return person;
     }
 

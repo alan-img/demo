@@ -8,6 +8,7 @@ import org.apache.hadoop.security.UserGroupInformation
 
 import java.net.URL
 import java.util
+import java.util.concurrent.TimeUnit
 import scala.collection.Iterator.empty.hasNext
 import scala.util.Random
 import scala.util.control.Breaks
@@ -26,12 +27,19 @@ object Demo {
   UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("root"))
   val configuration: Configuration = new Configuration()
   configuration.addResource("core-site.xml")
-  // configuration.set("dfs.replication", "3")
+  configuration.set("dfs.replication", "3")
   val fileSystem: FileSystem = FileSystem.get(configuration)
 
   def main(args: Array[String]): Unit = {
 
+    var i =0
+    while (i < 10) {
+      fileSystem.listStatus(new Path("/")).foreach(println)
+      TimeUnit.SECONDS.sleep(5)
+      i += 1
+    }
 
+    TimeUnit.SECONDS.sleep(5000)
 
     // val fsDataOutputStream: FSDataOutputStream = fileSystem.create(new Path("/test.txt"))
     // Breaks.breakable({
@@ -95,7 +103,6 @@ object Demo {
 
     // println(fileSystem.getClass)
     // println(classOf[FileSystem])
-
   }
 }
 

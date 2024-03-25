@@ -81,8 +81,9 @@
         <commons.collections.version>3.2.1</commons.collections.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <kafka.clients.version>2.4.1</kafka.clients.version>
-        <hive.jdbc.version>2.3.6</hive.jdbc.version>
+        <hive.jdbc.version>3.1.2</hive.jdbc.version>
         <parquet.version>1.10.1</parquet.version>
+        <kryo.shaded.version>4.0.2</kryo.shaded.version>
     </properties>
 
     <dependencyManagement>
@@ -208,6 +209,11 @@
                 <version>${curator.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.framework.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${jul.to.slf4j.version}</version>
@@ -267,6 +273,11 @@
                 <groupId>org.apache.parquet</groupId>
                 <artifactId>parquet-avro</artifactId>
                 <version>${parquet.version}</version> <!-- 版本号可能需要根据你的需求进行调整 -->
+            </dependency>
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo-shaded</artifactId>
+                <version>${kryo.shaded.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

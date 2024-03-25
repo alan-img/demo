@@ -1,6 +1,5 @@
-package com.dahuatech.codeblock.io
+package com.dahuatech.jedis.utils
 
-import org.apache.commons.io.FileUtils
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.io._
@@ -16,6 +15,13 @@ import java.util.Properties
  * @author qinjiawei(336105)
  * @since JDK8.0
  * @version 1.0.0
+ */
+/*
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
  */
 object FileUtil {
   private val logger: Logger = LoggerFactory.getLogger(getClass)

@@ -1,6 +1,8 @@
 package com.dahuatech.jedis.utils
 
-import com.dahuatech.jedis.utils.RedisUtil.jedisSentinelPool
+import lombok.extern.slf4j.Slf4j
+import org.slf4j.bridge.SLF4JBridgeHandler
+import org.slf4j.{Logger, LoggerFactory}
 import redis.clients.jedis.{Jedis, JedisPoolConfig, JedisSentinelPool}
 
 import java.util
@@ -18,9 +20,10 @@ import java.util.Properties
  */
 
 object RedisUtil {
-  /**
-   * 创建jedis哨兵连接池对象 由于是静态对象 所以天然线程安全
-   */
+  SLF4JBridgeHandler.removeHandlersForRootLogger()
+  SLF4JBridgeHandler.install()
+
+  private val logger: Logger = LoggerFactory.getLogger(getClass)
   private val jedisSentinelPool: JedisSentinelPool = getJedisSentinelPool()
 
   /**
@@ -29,10 +32,9 @@ object RedisUtil {
    * @param prop
    * @return jedis池配置对象
    */
-  def getJedisPoolConfig(prop: Properties = new Properties()): JedisPoolConfig = {
+  def getJedisPoolConfig(prop: Properties): JedisPoolConfig = {
     val jedisPoolConfig = new JedisPoolConfig()
     jedisPoolConfig.setMaxTotal(Integer.parseInt(prop.getProperty("redis.max.total", "8")))
-    jedisPoolConfig.setMaxWaitMillis(Integer.parseInt(prop.getProperty("redis.max.wait.millis", "15000")))
     jedisPoolConfig.setMaxIdle(Integer.parseInt(prop.getProperty("redis.max.idle", "8")))
 
     jedisPoolConfig
@@ -44,18 +46,17 @@ object RedisUtil {
    * @param prop
    * @return jedis连接池对象
    */
-  def getJedisSentinelPool(prop: Properties = new Properties()): JedisSentinelPool = {
+  def getJedisSentinelPool(properties: Properties = FileUtil.loadResourceAsProperties("redis.properties")): JedisSentinelPool = {
+    val masterName: String = properties.getProperty("master.name", "mymaster")
     val sentinels = new util.HashSet[String]()
-    sentinels.add(prop.getProperty("redis.server.address", "pc-common-redis-sentinel-service-0.pc-common-redis-sentinel-service.cloudspace.svc.cluster.local:26379"));
-
-    val timeout: Int = prop.getProperty("redis.timeout", "15000").toInt
-    val password: String = prop.getProperty("redis.password", "dahua@b0HM1G3X2l")
-    val database: Int = prop.getProperty("redis.database", "11").toInt
-
-    val jedisPoolConfig: JedisPoolConfig = getJedisPoolConfig()
+    sentinels.add(properties.getProperty("redis.sentinel.address", "hadoop102:26379"))
+    val jedisPoolConfig: JedisPoolConfig = getJedisPoolConfig(properties)
+    val timeout: Int = properties.getProperty("redis.timeout", "15000").toInt
+    val password: String = properties.getProperty("redis.password", "root")
+    val database: Int = properties.getProperty("redis.database", "11").toInt
 
     new JedisSentinelPool(
-      "mymaster",
+      masterName,
       sentinels,
       jedisPoolConfig,
       timeout,

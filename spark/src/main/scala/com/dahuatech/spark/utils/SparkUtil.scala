@@ -2,7 +2,7 @@ package com.dahuatech.spark.utils
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.{SparkConf, SparkContext, TaskContext}
+import org.apache.spark.{SparkConf, TaskContext}
 
 /**
  * <p>projectName: demo</p>
@@ -15,13 +15,14 @@ import org.apache.spark.{SparkConf, SparkContext, TaskContext}
  * @version 1.0.0
  */
 object SparkUtil {
-  def getLocalSparkSession(): SparkSession = SparkSession.builder().config(new SparkConf().setMaster("local[*]").setAppName(getClass.getName)).getOrCreate()
+  def getLocalSparkSession(): SparkSession = {
+    val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName(getClass.getName)
+    SparkSession.builder().config(sparkConf).getOrCreate()
+  }
 
   def getSparkSession(): SparkSession = {
     val sparkConf: SparkConf = new SparkConf().setAppName(getClass.getName)
     SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
-    // .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    // .registerKryoClasses(Array(classOf[FileWriter]))
   }
 
   def showPartition[T](rdd: RDD[T]): Unit = {

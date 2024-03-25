@@ -31,7 +31,7 @@ import com.dahuatech.codeblock.io.FileUtil;
  */
 object ConnUtil {
 
-  val prop = FileUtil.loadResourceAsProperties("pgsql.properties")
+  val prop = FileUtil.loadResourceAsProperties("sql.properties")
   val dataSource: DataSource = DruidDataSourceFactory.createDataSource(prop)
 
   /**

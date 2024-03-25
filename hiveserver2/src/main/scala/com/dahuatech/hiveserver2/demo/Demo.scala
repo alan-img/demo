@@ -20,10 +20,20 @@ import java.util
  */
 
 object Demo {
-  def main(args: Array[String]): Unit = {
+  def testQuery(): Unit = {
     val conn: Connection = SQLUtil.getHiveConnection()
     val queryRunner: QueryRunner = new QueryRunner()
     val list: util.List[Student] = queryRunner.query(conn, "select name, age from stu", new BeanListHandler[Student](classOf[Student]))
     println(list)
+  }
+
+  def main(args: Array[String]): Unit = {
+    val conn: Connection = SQLUtil.getHiveConnection()
+    val queryRunner: QueryRunner = new QueryRunner()
+    for (i <- 0 until 10) {
+      // queryRunner.update(conn, s"alter table stu add partition(dt = '${2024 + i}')")
+      queryRunner.update(conn, s"alter table stu1 drop partition(dt = '${2024 + i}')")
+      // queryRunner.update(conn, "truncate table stu")
+    }
   }
 }

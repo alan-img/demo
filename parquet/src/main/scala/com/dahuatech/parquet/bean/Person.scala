@@ -2,7 +2,6 @@ package com.dahuatech.parquet.bean
 
 import com.dahuatech.parquet.demo.Demo
 import org.apache.avro.Schema
-import org.apache.avro.specific.SpecificRecord
 
 /**
  * <p>projectName: demo</p>
@@ -15,10 +14,11 @@ import org.apache.avro.specific.SpecificRecord
  * @version 1.0.0
  */
 
-case class Person(var name: String, var age: Long) extends SpecificRecord {
+@SerialVersionUID(234288747753438L)
+case class Person(var name: String, var age: Long) {
   def this() = this("", 0L)
 
-  override def getSchema: Schema = Demo.schema
+  override def getSchema: Schema = Demo.getSchema()
 
   override def get(i: Int): AnyRef = i match {
     case 0 => this.name

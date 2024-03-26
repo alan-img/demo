@@ -14,7 +14,7 @@
     <option name="beforeShellScript" value="" />
     <option name="className" value="com.dahuatech.spark.demo.SparkContextDemo" />
     <option name="clusterManager" value="YARN" />
-    <option name="conf" value="" />
+    <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.debug spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.debug spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties " />
     <option name="deployMode" value="CLUSTER" />
     <option name="driverClassPath">
       <list />

@@ -29,14 +29,13 @@ import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 object SparkContextDemo {
   private val logger: Logger = LoggerFactory.getLogger(this.getClass)
-  private val sparkSession: SparkSession = SparkUtil.getLocalSparkSession()
+  private val sparkSession: SparkSession = SparkUtil.getSparkSession()
 
   def main(args: Array[String]): Unit = {
     logger.info("start distribute calculate...")
     val originRDD: RDD[java.lang.Long] = sparkSession.sparkContext.makeRDD(Seq.range(0L, 10L).map(_.asInstanceOf[lang.Long]), 5)
     val originKeyValueRDD: RDD[(lang.Long, lang.Long)] = originRDD.map(x => (x, x))
     val originListRDD: RDD[List[lang.Long]] = originRDD.map(x => List(x, x))
-
-
+    showPartition(originRDD)
   }
 }

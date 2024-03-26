@@ -3,6 +3,7 @@ package com.dahuatech.spark.utils
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, TaskContext}
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * <p>projectName: demo</p>
@@ -15,6 +16,8 @@ import org.apache.spark.{SparkConf, TaskContext}
  * @version 1.0.0
  */
 object SparkUtil {
+  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
   def getLocalSparkSession(): SparkSession = {
     val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName(getClass.getName)
     SparkSession.builder().config(sparkConf).getOrCreate()
@@ -28,7 +31,9 @@ object SparkUtil {
   def showPartition[T](rdd: RDD[T]): Unit = {
     println("start --<< " + rdd.getNumPartitions + " >>-- start")
     rdd.foreachPartition(
-      iter => println("partitionId: " + TaskContext.getPartitionId() + " <--> " + iter.mkString(","))
+      iter => {
+        println("partitionId: " + TaskContext.getPartitionId() + " <--> " + iter.mkString(","))
+      }
     )
     println("end --<< " + rdd.getNumPartitions + " >>-- end")
     println()

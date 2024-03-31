@@ -37,5 +37,6 @@ object SparkContextDemo {
     val originKeyValueRDD: RDD[(lang.Long, lang.Long)] = originRDD.map(x => (x, x))
     val originListRDD: RDD[List[lang.Long]] = originRDD.map(x => List(x, x))
     showPartition(originRDD)
+    TimeUnit.MINUTES.sleep(5)
   }
 }

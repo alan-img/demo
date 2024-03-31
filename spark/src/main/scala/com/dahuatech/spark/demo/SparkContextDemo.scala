@@ -34,8 +34,8 @@ object SparkContextDemo {
   def main(args: Array[String]): Unit = {
     logger.info("start distribute calculate...")
     val originRDD: RDD[java.lang.Long] = sparkSession.sparkContext.makeRDD(Seq.range(0L, 10L).map(_.asInstanceOf[lang.Long]), 5)
-    val originKeyValueRDD: RDD[(lang.Long, lang.Long)] = originRDD.map(x => (x, x))
     val originListRDD: RDD[List[lang.Long]] = originRDD.map(x => List(x, x))
+    val originKeyValueRDD: RDD[(lang.Long, lang.Long)] = originRDD.map(x => (x, x))
     showPartition(originRDD)
     TimeUnit.MINUTES.sleep(5)
   }

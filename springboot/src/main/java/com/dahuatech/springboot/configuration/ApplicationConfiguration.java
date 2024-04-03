@@ -20,9 +20,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({Human.class}) // 使用Import自动向IOC容器中注入对应类型的对象
 public class ApplicationConfiguration {
-    @Bean("student") // 方法参数Person对象会从IOC容器找查找并自动注入
-    public Student getStudent(Person person) {
-        System.out.println(person.getName());
+    @Bean
+    public Student getStudent(Person person) { // 方法参数Person对象会从IOC容器找查找并自动注入
         return new Student("jack", 23);
     }
 }

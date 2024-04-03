@@ -12,16 +12,12 @@ import java.io.IOException;
 @Slf4j
 @Component
 @WebFilter(filterName = "globalRequestFilter", urlPatterns = "/**") // 过滤出所有请求
-public class GlobalFilter implements Filter {
-
+public class CommonFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-
         log.info("global filter...");
-
         chain.doFilter(request, response);
     }
 }

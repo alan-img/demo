@@ -11,18 +11,5 @@ public class MainApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
-
-        // System.out.println();
-        // System.out.println(logger.getClass());
-        // System.out.println();
-        //
-        // System.out.println(context.getBeanDefinitionNames().length);
-        // for (String name : context.getBeanDefinitionNames()) {
-        //     System.out.println(name);
-        // }
-        //
-        // System.out.println();
-        // Human human = context.getBean(Human.class);
-        // System.out.println(human);
     }
 }

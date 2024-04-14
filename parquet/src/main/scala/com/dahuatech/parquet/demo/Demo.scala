@@ -94,9 +94,9 @@ object Demo {
   }
 
   def main(args: Array[String]): Unit = {
-    for (i <- 0 until 10) {
+    for (i <- 0 until 3) {
       val parquetWriter: ParquetWriter[Person] = getParquetWriter[Person](s"/user/hive/warehouse/stu/dt=${2024 + i}/${i}.parquet")
-      for (j <- 0 until 1000) {
+      for (j <- 0 until 2200000) {
         parquetWriter.write(Person(generateRandomString(50), i))
       }
       parquetWriter.close()

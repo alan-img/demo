@@ -1,9 +1,7 @@
 package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
-import org.apache.spark.Partitioner
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
@@ -17,15 +15,16 @@ import org.slf4j.{Logger, LoggerFactory}
  * @version 1.0.0
  */
 
-object SparkContextDemo {
+object SparkSQLDemo {
   private val logger: Logger = LoggerFactory.getLogger(this.getClass)
-  private val sparkSession: SparkSession = SparkUtil.getLocalSparkSession()
+  private val sparkSession: SparkSession = SparkUtil.getSparkSession()
 
   def main(args: Array[String]): Unit = {
-    val originRDD: RDD[Long] = sparkSession.sparkContext.range(0, 10, 1, 5)
-    val originListRDD: RDD[List[Long]] = originRDD.map(x => List(x, x))
-    val originKeyValueRDD: RDD[(Long, Long)] = originRDD.map(x => (x, x))
-
-
+    val df: DataFrame = sparkSession.read.table("default.stu")
+    println(df.rdd.getNumPartitions)
+    df.rdd.foreachPartition(iter => {
+      println(iter.size)
+      iter
+    })
   }
 }

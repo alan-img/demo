@@ -8,14 +8,14 @@ import java.util.Properties
 
 object KafkaParamConfig {
   val BOOTSTRAP_SERVERS_CONFIG = "hadoop101:9092,hadoop102:9092,hadoop103:9092"
-  val BUFFER_MEMORY_CONFIG = "33554432" // 32MB
-  val BATCH_SIZE_CONFIG = "16384" // 16KB
+  val BUFFER_MEMORY_CONFIG = "33554432" // 默认32MB
+  val BATCH_SIZE_CONFIG = "16384" // 默认16KB
   val LINGER_MS_CONFIG = "5" // 默认0ms
-  val COMPRESSION_TYPE_CONFIG = "snappy"
-  val ACKS_CONFIG = "-1" // 和设置为all相等 默认1
+  val COMPRESSION_TYPE_CONFIG = "snappy" // 默认不压缩
+  val ACKS_CONFIG = "all" // 默认就是all
   val RETRIES_CONFIG = "3" // 默认是int的最大值
   val ENABLE_IDEMPOTENCE_CONFIG = "true" // 开启幂等性 默认就是true表示开启 这里显式的写出来
-  val TRANSACTIONAL_ID_CONFIG = "transactional_id_config"
+  val TRANSACTIONAL_ID_CONFIG = "transactional_id_config" // 默认是null
 
   def getProducerProperties(): Properties = {
     val properties: Properties = new Properties()
@@ -26,11 +26,10 @@ object KafkaParamConfig {
     properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, KafkaParamConfig.BUFFER_MEMORY_CONFIG)
     properties.put(ProducerConfig.BATCH_SIZE_CONFIG, KafkaParamConfig.BATCH_SIZE_CONFIG)
     properties.put(ProducerConfig.LINGER_MS_CONFIG, KafkaParamConfig.LINGER_MS_CONFIG)
-    properties.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, KafkaParamConfig.COMPRESSION_TYPE_CONFIG)
     properties.put(ProducerConfig.ACKS_CONFIG, KafkaParamConfig.ACKS_CONFIG)
     properties.put(ProducerConfig.RETRIES_CONFIG, KafkaParamConfig.RETRIES_CONFIG)
-    properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, KafkaParamConfig.ENABLE_IDEMPOTENCE_CONFIG)
-    properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, KafkaParamConfig.TRANSACTIONAL_ID_CONFIG)
+    // properties.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, KafkaParamConfig.ENABLE_IDEMPOTENCE_CONFIG)
+    // properties.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, KafkaParamConfig.TRANSACTIONAL_ID_CONFIG)
 
     properties
   }
@@ -38,8 +37,8 @@ object KafkaParamConfig {
 
   val GROUP_ID_CONFIG = "kafka-consumer-group"
   val ENABLE_AUTO_COMMIT_CONFIG = "true" // 自动提交kafka消费者offset 默认就是true
-  val AUTO_COMMIT_INTERVAL_MS_CONFIG = "5000" // 默认5000 ms
-  val MAX_POLL_INTERVAL_MS_CONFIG = "300000" // 默认300000
+  val AUTO_COMMIT_INTERVAL_MS_CONFIG = "5000" // 默认5000ms即5秒
+  val MAX_POLL_INTERVAL_MS_CONFIG = "300000" // 默认300000ms即5分钟
 
   def getConsumerProperties(): Properties = {
     val properties: Properties = new Properties()

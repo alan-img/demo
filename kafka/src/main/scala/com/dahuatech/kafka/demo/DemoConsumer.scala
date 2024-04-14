@@ -6,17 +6,17 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import java.time.Duration
 import java.util
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{ExecutorService, Executors, TimeUnit}
 import scala.collection.JavaConversions._
 import scala.util.control.Breaks
 
 object DemoConsumer {
   private val logger: Logger = LoggerFactory.getLogger(getClass)
   private val topicName = "first"
+  val kafkaConsumer: KafkaConsumer[String, String] =
+    new KafkaConsumer[String, String](KafkaParamConfig.getConsumerProperties())
 
   def consumeAllPartitionData(topicName: String): Unit = {
-    val kafkaConsumer: KafkaConsumer[String, String] =
-      new KafkaConsumer[String, String](KafkaParamConfig.getConsumerProperties())
     kafkaConsumer.subscribe(util.Arrays.asList(topicName))
 
     try {
@@ -42,8 +42,6 @@ object DemoConsumer {
   }
 
   def consumeSpecificPartitionData(topicName: String, partition: Integer): Unit = {
-    val kafkaConsumer: KafkaConsumer[String, String] =
-      new KafkaConsumer[String, String](KafkaParamConfig.getConsumerProperties())
     kafkaConsumer.assign(
       util.Arrays.asList(
         new TopicPartition(topicName, partition)
@@ -105,9 +103,9 @@ object DemoConsumer {
   }
 
   def main(args: Array[String]): Unit = {
-    // consumeAllPartitionData(topicName)
+    consumeAllPartitionData(topicName)
     // consumeSpecificPartitionData(topicName, 0)
-    consumeFromSpecifyOffset(topicName, 0, 0)
+    // consumeFromSpecifyOffset(topicName, 0, 0)
 
     // val kafkaConsumer: KafkaConsumer[String, String] = new KafkaConsumer[String, String](KafkaParamConfig.getConsumerProperties())
     //

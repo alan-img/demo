@@ -18,16 +18,19 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 public class PersonObjectFactory extends BasePooledObjectFactory<Person> {
     @Override
     public Person create() {
+        System.out.println("create person...");
         return new Person("alan", 23, "ahut");
     }
 
     @Override
     public PooledObject<Person> wrap(Person person) {
+        System.out.println("wrap persin...");
         return new DefaultPooledObject<>(person);
     }
 
     @Override
     public void destroyObject(PooledObject<Person> p) throws Exception {
+        System.out.println("destroy object ...");
         super.destroyObject(p);
     }
 }

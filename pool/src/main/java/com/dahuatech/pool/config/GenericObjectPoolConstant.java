@@ -20,6 +20,6 @@ public class GenericObjectPoolConstant {
     public static final int maxTotal = 10;
     public static final int minIdle = 0;
     public static final int maxIdle = 10;
-    public static final Long maxWaitMillis = 5000L;
+    public static final Long maxWaitSeconds = 5L;
 
 }

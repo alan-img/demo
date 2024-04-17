@@ -1,6 +1,10 @@
 package com.dahuatech.pool.demo;
 
+import com.dahuatech.pool.bean.Person;
 import com.dahuatech.pool.objectpool.PersonObjectPool;
+
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>projectName: demo</p>
@@ -14,11 +18,15 @@ import com.dahuatech.pool.objectpool.PersonObjectPool;
  */
 
 public class JavaDemo {
-    public static void main(String[] args) {
-        PersonObjectPool pool = new PersonObjectPool();
-        System.out.println(pool.get());
-        System.out.println("pool.getNumActive() = " + pool.getNumActive());
-        System.out.println("pool.getNumIdle() = " + pool.getNumIdle());
-        pool.close();
+    public static void main(String[] args) throws InterruptedException {
+        PersonObjectPool personObjectPool = new PersonObjectPool();
+        while (true) {
+            Person person = personObjectPool.borrowObject();
+            System.out.println(person);
+            // personObjectPool.returnObject(person);
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println("pool.getNumActive() = " + personObjectPool.getNumActive());
+            System.out.println("pool.getNumIdle() = " + personObjectPool.getNumIdle());
+        }
     }
 }

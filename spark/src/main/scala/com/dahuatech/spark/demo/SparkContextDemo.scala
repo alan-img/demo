@@ -1,6 +1,7 @@
 package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
+import com.dahuatech.spark.utils.SparkUtil._
 import org.apache.spark.Partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
@@ -26,6 +27,6 @@ object SparkContextDemo {
     val originListRDD: RDD[List[Long]] = originRDD.map(x => List(x, x))
     val originKeyValueRDD: RDD[(Long, Long)] = originRDD.map(x => (x, x))
 
-
+    
   }
 }

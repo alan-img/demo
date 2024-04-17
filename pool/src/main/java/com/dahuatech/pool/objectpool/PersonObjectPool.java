@@ -8,6 +8,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.Objects;
 
 /**
@@ -29,10 +30,11 @@ public class PersonObjectPool {
         genericObjectPoolConfig.setMaxTotal(GenericObjectPoolConstant.maxTotal);
         genericObjectPoolConfig.setMinIdle(GenericObjectPoolConstant.minIdle);
         genericObjectPoolConfig.setMaxIdle(GenericObjectPoolConstant.maxIdle);
-        genericObjectPoolConfig.setMaxWaitMillis(GenericObjectPoolConstant.maxWaitMillis);
+        genericObjectPoolConfig.setMaxWait(Duration.ofSeconds(GenericObjectPoolConstant.maxWaitSeconds));
 
-        objectPool = new GenericObjectPool<>(new PersonObjectFactory(),
-                genericObjectPoolConfig);
+        PersonObjectFactory personObjectFactory = new PersonObjectFactory();
+
+        objectPool = new GenericObjectPool<>(personObjectFactory, genericObjectPoolConfig);
 
         try {
             objectPool.addObjects(GenericObjectPoolConstant.maxTotal);
@@ -41,7 +43,7 @@ public class PersonObjectPool {
         }
     }
 
-    public Person get() {
+    public Person borrowObject() {
         try {
             return objectPool.borrowObject();
         } catch (Exception e) {
@@ -50,7 +52,7 @@ public class PersonObjectPool {
         }
     }
 
-    public void ret(Person person) {
+    public void returnObject(Person person) {
         try {
             objectPool.returnObject(person);
         } catch (Exception e) {

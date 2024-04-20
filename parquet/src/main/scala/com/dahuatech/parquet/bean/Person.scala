@@ -1,8 +1,5 @@
 package com.dahuatech.parquet.bean
 
-import com.dahuatech.parquet.demo.Demo
-import org.apache.avro.Schema
-
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.parquet.bean</p>
@@ -15,6 +12,4 @@ import org.apache.avro.Schema
  */
 
 @SerialVersionUID(234288747753438L)
-case class Person(var name: String, var age: Long) {
-  def this() = this("", 0L)
-}
+case class Person(var name: String = "alan", var age: Long = 0L)

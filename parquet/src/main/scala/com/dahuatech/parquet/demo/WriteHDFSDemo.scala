@@ -34,21 +34,18 @@ import scala.collection.mutable.ListBuffer
  * @version 1.0.0
  */
 
-object Demo {
+object WriteHDFSDemo {
   UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("root"))
   val configuration: Configuration = new Configuration()
-  configuration.addResource("core-site.xml")
+  configuration.addResource("core-site.xml.bak")
 
-  def getSchema(): Schema = {
-    val schema: Schema = SchemaBuilder
+  def getSchema(): Schema = SchemaBuilder
       .builder()
       .record("com.dahuatech.parquet.bean.Person")
       .fields()
       .requiredString("name")
       .requiredLong("age")
       .endRecord()
-    schema
-  }
 
   def getParquetWriter[T](path: String): ParquetWriter[T] = {
     val parquetWriter: ParquetWriter[T] = AvroParquetWriter

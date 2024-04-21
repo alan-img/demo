@@ -1,5 +1,7 @@
 package com.dahuatech.parquet.bean
 
+import org.apache.avro.generic.GenericData
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.parquet.bean</p>
@@ -12,4 +14,9 @@ package com.dahuatech.parquet.bean
  */
 
 @SerialVersionUID(234288747753438L)
-case class Person(var name: String = "alan", var age: Long = 0L)
+case class Person(name: String, age: Long) {
+  // 样例类/空参构造器必须这样设置 直接在类参数中设置通过反射调用空参构造器不生效
+  def this() {
+    this("", 0)
+  }
+}

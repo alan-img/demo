@@ -3,24 +3,19 @@ package com.dahuatech.parquet.demo
 import com.dahuatech.parquet.bean.Person
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
-import com.sun.jersey.core.header.FormDataContentDisposition.name
-import org.apache.avro.generic.{GenericData, GenericRecord}
+import org.apache.avro.generic.GenericRecord
 import org.apache.avro.reflect.ReflectData
 import org.apache.avro.{Schema, SchemaBuilder}
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Options.HandleOpt.path
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.security.UserGroupInformation
-import org.apache.parquet.avro.{AvroParquetReader, AvroParquetWriter, AvroReadSupport}
-import org.apache.parquet.hadoop.example.GroupReadSupport
+import org.apache.parquet.avro.{AvroParquetWriter, AvroReadSupport}
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
 import org.apache.parquet.hadoop.{ParquetFileWriter, ParquetReader, ParquetWriter}
 
-import java.util
 import java.util.Random
 import scala.collection.immutable
-import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -37,31 +32,31 @@ import scala.collection.mutable.ListBuffer
 object WriteHDFSDemo {
   UserGroupInformation.setLoginUser(UserGroupInformation.createRemoteUser("root"))
   val configuration: Configuration = new Configuration()
-  configuration.addResource("core-site.xml.bak")
+  configuration.addResource("core-site.xml")
 
-  def getSchema(): Schema = SchemaBuilder
-      .builder()
-      .record("com.dahuatech.parquet.bean.Person")
-      .fields()
-      .requiredString("name")
-      .requiredLong("age")
-      .endRecord()
+  def getPersonSchema(): Schema = SchemaBuilder
+    .builder()
+    .record(classOf[Person].getSimpleName)
+    .fields()
+    .requiredString("name")
+    .requiredLong("age")
+    .endRecord()
 
-  def getParquetWriter[T](path: String): ParquetWriter[T] = {
+  def getParquetWriter[T](fileAbsolutePath: String, schema: Schema): ParquetWriter[T] = {
     val parquetWriter: ParquetWriter[T] = AvroParquetWriter
-      .builder[T](new Path(path))
+      .builder[T](new Path(fileAbsolutePath))
       .withConf(configuration)
       .withDataModel(ReflectData.get())
       .withCompressionCodec(CompressionCodecName.UNCOMPRESSED)
-      .withSchema(getSchema())
+      .withSchema(schema)
       .withWriteMode(ParquetFileWriter.Mode.OVERWRITE)
       .build()
     parquetWriter
   }
 
-  def getParquetReader[T](path: String): ParquetReader[T] = {
-    val parquetReader: ParquetReader[T] = ParquetReader
-      .builder[T](new AvroReadSupport[T](), new Path(path))
+  def getParquetReader(fileAbsolutePath: String): ParquetReader[GenericRecord] = {
+    val parquetReader: ParquetReader[GenericRecord] = ParquetReader
+      .builder[GenericRecord](new AvroReadSupport[GenericRecord](), new Path(fileAbsolutePath))
       .withConf(configuration)
       .build()
     parquetReader
@@ -76,32 +71,38 @@ object WriteHDFSDemo {
   /**
    * 测试序列化和反序列化
    */
-  def useKryoSerDer(): Unit = {
+  def useKryoSerObject[T](obj: T): Array[Byte] = {
     val kryo: Kryo = new Kryo()
-    kryo.register(classOf[String], 1)
-    kryo.register(classOf[Int], 1)
-    val p: Person = Person("alan", 23)
+
     val byteArrayOutputStream: ByteArrayOutputStream = new ByteArrayOutputStream()
     val output: Output = new Output(byteArrayOutputStream)
-    kryo.writeObject(output, p)
+    kryo.writeObject(output, obj)
     output.flush()
-    println(new String(byteArrayOutputStream.toByteArray))
-    val p1: Person = kryo.readObject(new Input(byteArrayOutputStream.toByteArray), classOf[Person])
-    println(p1)
+    output.close()
+
+    byteArrayOutputStream.toByteArray
+  }
+
+  def useKryoDerObject[T](objByteArray: Array[Byte], clazz: Class[T]): T  = {
+    val kryo: Kryo = new Kryo()
+
+    kryo.readObject(new Input(objByteArray), clazz)
   }
 
   def main(args: Array[String]): Unit = {
     for (i <- 0 until 3) {
-      val parquetWriter: ParquetWriter[Person] = getParquetWriter[Person](s"/user/hive/warehouse/stu/dt=${2024 + i}/${i}.parquet")
-      for (j <- 0 until 2200000) {
-        parquetWriter.write(Person(generateRandomString(50), i))
+      val parquetWriter: ParquetWriter[Person] = getParquetWriter[Person](s"/user/hive/warehouse/stu/dt=${2024 + i}/${i}.parquet", getPersonSchema())
+      for (j <- 0 until 1000) {
+        val randomString: String = generateRandomString(50)
+        parquetWriter.write(Person(randomString, j))
       }
       parquetWriter.close()
     }
 
-    // val record: Person = parquetReader.read()
-    // if (record != null) {
-    //   println(record)
-    // }
+    val fileAbsolutePath: String = s"/user/hive/warehouse/stu/dt=2024/0.parquet"
+    val parquetReader: ParquetReader[GenericRecord] = getParquetReader(fileAbsolutePath)
+    val genericRecord: GenericRecord = parquetReader.read()
+    println(genericRecord)
+    parquetReader.close()
   }
 }

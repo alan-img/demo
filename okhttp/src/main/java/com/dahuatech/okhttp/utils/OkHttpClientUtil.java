@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class OkHttpClientUtil {
     private static volatile OkHttpClient okHttpClient;
 
-    // 私有化okHttpClient客户端
+    // 私有化okHttpClient构造器
     private OkHttpClientUtil() {
     }
 
@@ -36,20 +36,22 @@ public class OkHttpClientUtil {
     public static OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
             synchronized (OkHttpClientUtil.class) {
-                TrustManager[] trustManagers = buildTrustManagers();
-                okHttpClient = new OkHttpClient();
-                // 设置连接超时时间
-                okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
-                // 从连接成功到响应的总时间
-                okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
-                // 写入超时时间
-                okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
-                // 跳过ssl认证(https)
-                okHttpClient.setSslSocketFactory(createSSLSocketFactory(trustManagers));
-                okHttpClient.setHostnameVerifier((hostName, session) -> true);
-                okHttpClient.setRetryOnConnectionFailure(true);
-                // 设置连接池  最大连接数量  , 持续存活的连接
-                okHttpClient.setConnectionPool(new ConnectionPool(50, 10, TimeUnit.MINUTES));
+                if (okHttpClient == null) {
+                    okHttpClient = new OkHttpClient();
+                    // 设置连接超时时间
+                    okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+                    // 设置读数据超时时间
+                    okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+                    // 设置写数据超时时间
+                    okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+                    // 跳过ssl认证(https)
+                    TrustManager[] trustManagers = buildTrustManagers();
+                    okHttpClient.setSslSocketFactory(createSSLSocketFactory(trustManagers));
+                    okHttpClient.setHostnameVerifier((hostName, session) -> true);
+                    okHttpClient.setRetryOnConnectionFailure(true);
+                    // 设置连接池  最大连接数量  , 持续存活的连接
+                    okHttpClient.setConnectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
+                }
             }
         }
 
@@ -65,9 +67,9 @@ public class OkHttpClientUtil {
     private static SSLSocketFactory createSSLSocketFactory(TrustManager[] trustAllCerts) {
         SSLSocketFactory sslSocketFactory = null;
         try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            sslSocketFactory = sc.getSocketFactory();
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            sslSocketFactory = sslContext.getSocketFactory();
         } catch (Exception exp) {
             exp.printStackTrace();
         }

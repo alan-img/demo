@@ -1,9 +1,9 @@
 package com.dahuatech.okhttp.demo
 
-import com.dahuatech.okhttp.utils.OkHttpClientUtil
+import com.dahuatech.okhttp.utils.{MediaTypeEnum, OkHttpClientUtil}
 import com.squareup.okhttp.{MediaType, OkHttpClient, Request, RequestBody, Response, ResponseBody}
 
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{ExecutorService, Executors, TimeUnit}
 
 /**
  * <p>projectName: demo</p>
@@ -16,29 +16,33 @@ import java.util.concurrent.TimeUnit
  * @version 1.0.0
  */
 object Demo {
-  private val mediaType = "application/json;charset=utf-8"
+  val okHttpClient: OkHttpClient = OkHttpClientUtil.getOkHttpClient
 
   def main(args: Array[String]): Unit = {
+    val requestBody: RequestBody = RequestBody.create(
+      MediaType.parse(MediaTypeEnum.APPLICATION_JSON_CHARSET_UTF_8.getValue),
+      "{\"name\": \"alan\", \"age\": 20}"
+    )
 
-    // okHttpClient
-    val okHttpClient: OkHttpClient = OkHttpClientUtil.getOkHttpClient
-
-    val requestBody: RequestBody = RequestBody.create(MediaType.parse(mediaType), "[{\"channel\": \"Fw61LVxMA1BHNH5LQAU3TQ\", \"gpX\": 120.1111, \"gpY\": 30.222}]")
-    // request
     val request: Request = new Request.Builder()
-      .url("http://localhost:8888/time/space/file")
-      // .url("http://pc-offline-dossier-fix-0.pc-offline-dossier-fix.cloudspace.svc.cluster.local:9083/api/dossierfix/upload")
-      .get()
+      .url("http://hadoop101:8888/upload")
       .post(requestBody)
       .build()
 
-    // response
-    val response: Response = okHttpClient.newCall(request).execute()
-    val responseBody: ResponseBody = response.body()
-
-    println(response.code())
-    println(response.isSuccessful)
-    println(responseBody.string())
+    val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
+    for (i <- 0 until 10) {
+      threadPool.execute(new Runnable {
+        override def run(): Unit = {
+          while (true) {
+            val response: Response = okHttpClient.newCall(request).execute()
+            val responseBody: ResponseBody = response.body()
+            println(response.code())
+            println(response.isSuccessful)
+            println(responseBody.string())
+          }
+        }
+      })
+    }
   }
 
   /**
@@ -46,18 +50,22 @@ object Demo {
    *
    * @return
    */
-  def sendRequest(): Response = {
+  def sendRequest(): Unit = {
+    val requestBody: RequestBody = RequestBody.create(MediaType.parse(MediaTypeEnum.APPLICATION_JSON_CHARSET_UTF_8.getValue),
+      "[{\"channel\": \"Fw61LVxMA1BHNH5LQAU3TQ\", \"gpX\": 120.1111, \"gpY\": 30.222}]")
 
-    val okHttpClient: OkHttpClient = OkHttpClientUtil.getOkHttpClient
-    val requestBody: RequestBody = RequestBody.create(MediaType.parse(mediaType), "[{\"channel\": \"Fw61LVxMA1BHNH5LQAU3TQ\", \"gpX\": 120.1111, \"gpY\": 30.222}]")
     val request: Request = new Request.Builder()
       .url("http://localhost:8888/time/space/file")
-      .get()
+      // .url("http://pc-offline-dossier-fix-0.pc-offline-dossier-fix.cloudspace.svc.cluster.local:9083/api/dossierfix/upload")
+      // .get()
       .post(requestBody)
       .build()
 
-    TimeUnit.SECONDS.sleep(5)
+    val response: Response = okHttpClient.newCall(request).execute()
+    val responseBody: ResponseBody = response.body()
 
-    okHttpClient.newCall(request).execute()
+    println(response.code())
+    println(response.isSuccessful)
+    println(responseBody.string())
   }
 }

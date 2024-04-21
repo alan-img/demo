@@ -1,16 +1,17 @@
 package com.dahuatech.parquet.demo
 
 import com.dahuatech.parquet.bean.Person
-import com.dahuatech.parquet.demo.WriteHDFSDemo.{configuration, getSchema}
+import com.dahuatech.parquet.demo.WriteHDFSDemo.{configuration, getPersonSchema}
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.{Input, Output}
+import org.apache.avro.generic.GenericRecord
 import org.apache.avro.reflect.ReflectData
 import org.apache.avro.{Schema, SchemaBuilder}
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.security.UserGroupInformation
-import org.apache.parquet.avro.{AvroParquetWriter, AvroReadSupport}
+import org.apache.parquet.avro.{AvroParquetReader, AvroParquetWriter, AvroReadSupport}
 import org.apache.parquet.hadoop.metadata.CompressionCodecName
 import org.apache.parquet.hadoop.{ParquetFileWriter, ParquetReader, ParquetWriter}
 
@@ -33,13 +34,13 @@ import scala.collection.immutable
 object WriteLocalDemo {
   def getPersonSchema(): Schema = SchemaBuilder
       .builder()
-      .record(classOf[Person].getName)
+      .record(classOf[Person].getSimpleName)
       .fields()
       .requiredString("name")
       .requiredLong("age")
       .endRecord()
 
-  def getParquetWriter[T](fileAbsolutePath: String, schema: Schema): ParquetWriter[T] = {
+  def createParquetWriter[T](fileAbsolutePath: String, schema: Schema): ParquetWriter[T] = {
     val parquetWriter: ParquetWriter[T] = AvroParquetWriter
       .builder[T](new Path(fileAbsolutePath))
       .withDataModel(ReflectData.get())
@@ -48,9 +49,9 @@ object WriteLocalDemo {
     parquetWriter
   }
 
-  def getParquetReader[T](fileAbsolutePath: String): ParquetReader[T] = {
-    val parquetReader: ParquetReader[T] = ParquetReader
-      .builder[T](new AvroReadSupport[T](), new Path(fileAbsolutePath))
+  def createParquetReader(fileAbsolutePath: String): ParquetReader[GenericRecord] = {
+    val parquetReader: ParquetReader[GenericRecord] = ParquetReader
+      .builder[GenericRecord](new AvroReadSupport[GenericRecord](), new Path(fileAbsolutePath))
       .build()
     parquetReader
   }
@@ -81,7 +82,8 @@ object WriteLocalDemo {
   def main(args: Array[String]): Unit = {
     val fileAbsolutePath: String = "D:\\dev\\idea\\project\\demo\\parquet\\target\\test.parquet"
     new File(fileAbsolutePath).delete()
-    val parquetWriter: ParquetWriter[Person] = getParquetWriter[Person](
+
+    val parquetWriter: ParquetWriter[Person] = createParquetWriter[Person](
       fileAbsolutePath,
       getPersonSchema()
     )
@@ -89,5 +91,10 @@ object WriteLocalDemo {
       parquetWriter.write(Person(generateRandomString(50), i))
     }
     parquetWriter.close()
+
+    val parquetReader: ParquetReader[GenericRecord] = createParquetReader(fileAbsolutePath)
+    val genericRecord: GenericRecord = parquetReader.read()
+    println(genericRecord)
+    parquetReader.close()
   }
 }

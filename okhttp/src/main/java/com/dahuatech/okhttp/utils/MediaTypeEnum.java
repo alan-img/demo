@@ -11,5 +11,15 @@ package com.dahuatech.okhttp.utils;
  * @since JDK8.0
  */
 public enum MediaTypeEnum {
-    MEDIA_TYPE
+    APPLICATION_JSON_CHARSET_UTF_8("application/json;charset=utf-8");
+
+    private final String value;
+
+    MediaTypeEnum(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

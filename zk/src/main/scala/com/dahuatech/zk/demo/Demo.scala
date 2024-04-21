@@ -26,20 +26,12 @@ import scala.collection.JavaConverters
 object Demo {
   val curatorFramework: CuratorFramework = ZKUtil.curatorFramework
 
-  def generalTest(): Unit ={
-    curatorFramework.create().forPath("/test1", "10".getBytes())
-    curatorFramework.delete().forPath("/test1")
-    val bytes: Array[Byte] = curatorFramework.getData.forPath("/test1")
-    println(new String(bytes, StandardCharsets.UTF_8))
-
-    curatorFramework.getChildren.forPath("/test1").foreach(println)
-    curatorFramework.setData().forPath("/test1", "1111".getBytes())
-
-    curatorFramework.checkExists().forPath("/test1")
+  def main(args: Array[String]): Unit = {
+    listenNodeDataChange()
   }
 
   def listenNodeDataChange(): Unit ={
-    val nodeCache: NodeCache = new NodeCache(curatorFramework, "/test1")
+    val nodeCache: NodeCache = new NodeCache(curatorFramework, "/test")
 
     nodeCache.getListenable.addListener(new NodeCacheListener {
       override def nodeChanged(): Unit = {
@@ -48,66 +40,27 @@ object Demo {
     })
 
     nodeCache.start()
-    TimeUnit.DAYS.sleep(1)
+    TimeUnit.DAYS.sleep(10)
     nodeCache.close()
   }
 
   def listenNodePathChange(): Unit ={
-    val pathChildrenCache: PathChildrenCache = new PathChildrenCache(curatorFramework, "/servers", true)
+    val pathChildrenCache: PathChildrenCache = new PathChildrenCache(curatorFramework, "/test", true)
 
     pathChildrenCache.getListenable.addListener(new PathChildrenCacheListener {
       override def childEvent(client: CuratorFramework, event: PathChildrenCacheEvent): Unit = {
         if (PathChildrenCacheEvent.Type.CHILD_ADDED.eq(event.getType)) {
-          println("child add -> " + new String(event.getData.getData, StandardCharsets.UTF_8))
-          println(event.getData.getPath)
+          println(s"child add: ${event.getData.getPath} -> ${new String(event.getData.getData, StandardCharsets.UTF_8)}")
         }
 
         if (PathChildrenCacheEvent.Type.CHILD_REMOVED.eq(event.getType)) {
-          println("child remove -> " + new String(event.getData.getData, StandardCharsets.UTF_8))
-          println(event.getData.getPath)
+          println(s"child remove: ${event.getData.getPath} -> ${new String(event.getData.getData, StandardCharsets.UTF_8)}")
         }
       }
     })
 
     pathChildrenCache.start()
-    TimeUnit.DAYS.sleep(1)
+    TimeUnit.DAYS.sleep(10)
     pathChildrenCache.close()
-  }
-
-  def serverDynamicOnlineOfflinePerception(): Unit ={
-    val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
-    threadPool.execute(new Runnable {
-      override def run(): Unit = {
-        curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath("/servers/svc1", "svc1".getBytes())
-        TimeUnit.SECONDS.sleep(10)
-        curatorFramework.delete().forPath("/servers/svc1")
-      }
-    })
-
-    threadPool.execute(new Runnable {
-      override def run(): Unit = {
-        curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath("/servers/svc2", "svc2".getBytes())
-        TimeUnit.SECONDS.sleep(300)
-      }
-    })
-
-    threadPool.execute(new Runnable {
-      override def run(): Unit = {
-        curatorFramework.create().withMode(CreateMode.EPHEMERAL).forPath("/servers/svc3", "svc3".getBytes())
-        TimeUnit.SECONDS.sleep(300)
-      }
-    })
-
-    threadPool.execute(new Runnable {
-      override def run(): Unit = {
-        listenNodePathChange()
-      }
-    })
-    TimeUnit.SECONDS.sleep(300)
-    threadPool.shutdown()
-  }
-
-  def main(args: Array[String]): Unit = {
-
   }
 }

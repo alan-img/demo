@@ -43,6 +43,8 @@ object Demo {
         }
       })
     }
+
+    threadPool.shutdown()
   }
 
   /**

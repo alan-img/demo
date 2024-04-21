@@ -35,6 +35,13 @@ object Demo {
   private val logger: Logger = LoggerFactory.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {
-
+    println("start...")
+    try {
+      throw new OutOfMemoryError("alan")
+    } catch {
+      case err: OutOfMemoryError =>
+        logger.error(s"happened error", err)
+    }
+    println("end...")
   }
 }

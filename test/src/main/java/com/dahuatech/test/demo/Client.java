@@ -1,14 +1,19 @@
 package com.dahuatech.test.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Client {
-    public static void main(String[] args) {
+    private static Logger logger = LoggerFactory.getLogger(Client.class);
 
+    public static void main(String[] args) {
+        System.out.println("start...");
+        try {
+            throw new OutOfMemoryError("alan");
+        } catch (OutOfMemoryError err) {
+            logger.error("happen error", err);
+        }
+        System.out.println("end...");
     }
 }
 

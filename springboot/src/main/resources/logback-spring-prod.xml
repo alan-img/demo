@@ -31,8 +31,10 @@
         </encoder>
         <file>${dir}/logback_roll_file.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${dir}/rolling.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
+            <fileNamePattern>${dir}/logback_roll_file.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
             <maxFileSize>100MB</maxFileSize>
+            <!-- 最大保留7天 -->
+            <maxHistory>7</maxHistory>
         </rollingPolicy>
     </appender>
 

@@ -25,26 +25,14 @@ object Demo {
     )
 
     val request: Request = new Request.Builder()
-      .url("http://hadoop101:8888/upload")
-      .post(requestBody)
+      .get()
+      .url("http://hadoop101:8888/human")
       .build()
 
-    val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
-    for (i <- 0 until 10) {
-      threadPool.execute(new Runnable {
-        override def run(): Unit = {
-          while (true) {
-            val response: Response = okHttpClient.newCall(request).execute()
-            val responseBody: ResponseBody = response.body()
-            println(response.code())
-            println(response.isSuccessful)
-            println(responseBody.string())
-          }
-        }
-      })
+    while (true) {
+      okHttpClient.newCall(request).execute()
     }
 
-    threadPool.shutdown()
   }
 
   /**

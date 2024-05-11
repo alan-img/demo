@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %c [%thread] %-5level %msg%n"/>
-    <property name="DIR" value="/root/logback"/>
+    <!-- spring-boot默认配置文件 一般做参考使用 -->
+    <!-- <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyyMM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
 
-    <appender name="Console"
-              class="ch.qos.logback.core.ConsoleAppender">
+    <property name="dir" value="./springboot/dev"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${pattern}</pattern>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <appender name="File" class="ch.qos.logback.core.FileAppender">
-        <encoder
-                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${pattern}</pattern>
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <file>${DIR}/logback.log</file>
+        <file>${dir}/logback_file.log</file>
     </appender>
 
-    <appender name="RollFile"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <encoder
-                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${pattern}</pattern>
+    <appender name="rollFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <file>${DIR}/roll_logback.log</file>
-        <rollingPolicy
-                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${DIR}/rolling.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
-            <maxFileSize>1MB</maxFileSize>
+        <file>${dir}/logback_roll_file.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${dir}/rolling.%d{yyyy-MM-dd}.log%i.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="File"/>
+        <appender-ref ref="file" />
     </root>
+
 </configuration>

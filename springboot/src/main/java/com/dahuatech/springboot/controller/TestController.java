@@ -59,8 +59,4 @@ public class TestController extends BaseController {
         return new Person(name, age);
     }
 
-    @GetMapping("/get/{age}")
-    public ResponseEntity<String> get() {
-        return ResponseEntity.status(HttpStatus.OK).body();
-    }
 }

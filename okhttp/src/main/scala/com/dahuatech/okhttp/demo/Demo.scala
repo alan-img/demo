@@ -28,11 +28,14 @@ object Demo {
           |""".stripMargin)
 
       val request: Request = new Request.Builder()
-        .post(requestBody)
-        .url("http://localhost:8888/upload")
+        .get()
+        .url("http://localhost:8888/get/12?name=alan")
         .addHeader("connection", "keep-alive")
         .build()
-      okHttpClient.newCall(request).execute()
+      val response: Response = okHttpClient.newCall(request).execute()
+      println(response.protocol())
+      println(response.code())
+      println(response.message())
       TimeUnit.MILLISECONDS.sleep(50L)
     }
 

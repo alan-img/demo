@@ -7,7 +7,15 @@ import com.dahuatech.springboot.bean.Person;
 import com.dahuatech.springboot.bean.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
@@ -49,5 +57,10 @@ public class TestController extends BaseController {
         String name = jsonObj.getString("name");
         Integer age = jsonObj.getInteger("age");
         return new Person(name, age);
+    }
+
+    @GetMapping("/get/{age}")
+    public ResponseEntity<String> get() {
+        return ResponseEntity.status(HttpStatus.OK).body();
     }
 }

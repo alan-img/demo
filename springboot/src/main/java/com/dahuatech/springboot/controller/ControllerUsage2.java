@@ -371,19 +371,4 @@ public class ControllerUsage2 {
         return "success";
     }
 
-    @RequestMapping("/test177")
-    public String test17() {
-        // 模拟算术异常
-        int val = 10 / 0;
-        return "success";
-    }
-
-    @RequestMapping("/test188")
-    public String test18() {
-        String s = null;
-        // 模拟空指针异常
-        s.indexOf("a");
-        return "success";
-    }
-
 }

@@ -22,9 +22,14 @@ object Demo {
   def main(args: Array[String]): Unit = {
 
     while (true) {
+      val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"),
+        """
+          |{"name": "alan", "age": 23}
+          |""".stripMargin)
+
       val request: Request = new Request.Builder()
-        .get()
-        .url("http://localhost:8888/human")
+        .post(requestBody)
+        .url("http://localhost:8888/upload")
         .addHeader("connection", "keep-alive")
         .build()
       okHttpClient.newCall(request).execute()

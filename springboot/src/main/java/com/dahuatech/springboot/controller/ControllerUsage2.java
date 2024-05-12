@@ -109,7 +109,7 @@ public class ControllerUsage2 {
      * @param modelMap
      * @return
      */
-    @RequestMapping("/test5")
+    @RequestMapping("/test55")
     public String test5(ModelMap modelMap) {
         modelMap.addAttribute("username", "test5");
         return "success";
@@ -128,7 +128,7 @@ public class ControllerUsage2 {
      * @param session
      * @return
      */
-    @RequestMapping("/test6")
+    @RequestMapping("/test66")
     public String test6(HttpSession session) {
         session.setAttribute("username", "test6");
         return "success";
@@ -140,7 +140,7 @@ public class ControllerUsage2 {
      * @param request
      * @return
      */
-    @RequestMapping("/test7")
+    @RequestMapping("/test77")
     public String test7(HttpSession session, HttpServletRequest request) {
         /**
          * 通过请求request对象和httpsession对象都可以获取servletcontext对象
@@ -155,7 +155,7 @@ public class ControllerUsage2 {
      * 请求转发
      * @return
      */
-    @RequestMapping("/test8")
+    @RequestMapping("/test88")
     public String test8() {
         /**
          * 转发只能转发到一个请求，不能转发到一个具体的页面，因为页面必须由ThymeLeafView视图解析器解析渲染后才能访问
@@ -171,7 +171,7 @@ public class ControllerUsage2 {
      * 请求重定向
      * @return
      */
-    @RequestMapping("/test9")
+    @RequestMapping("/test99")
     public String test9() {
         /**
          * 重定向只能重定向到一个请求，不能重定向到一个具体的页面，因为页面必须由ThymeLeafView视图解析器解析渲染后才能访问
@@ -183,7 +183,7 @@ public class ControllerUsage2 {
         return "redirect:/test7";
     }
 
-    @RequestMapping("test10")
+    @RequestMapping("test100")
     private String test10() {
         return "success";
     }
@@ -255,7 +255,7 @@ public class ControllerUsage2 {
      * @param requestBody
      * @return
      */
-    @RequestMapping("/test11")
+    @RequestMapping("/test111")
     public String test11(@RequestBody String requestBody) {
         System.out.println("requestBody = " + requestBody);
         return "flag";
@@ -266,7 +266,7 @@ public class ControllerUsage2 {
      * @param requestEntity
      * @return
      */
-    @RequestMapping("/test12")
+    @RequestMapping("/test122")
     public String test12(RequestEntity<String> requestEntity) {
         HttpHeaders headers = requestEntity.getHeaders();
         String body = requestEntity.getBody();
@@ -279,7 +279,7 @@ public class ControllerUsage2 {
      * 通过在控制器方法注解将返回值作为响应体放回
      * @return
      */
-    @RequestMapping("/test13")
+    @RequestMapping("/test133")
     @ResponseBody
     public String test13() {
         return "hello, spring mvc";
@@ -289,7 +289,7 @@ public class ControllerUsage2 {
      * 设置自动将JavaBean转换为json字符串并作为响应体返回
      * @return
      */
-    @RequestMapping("/test14")
+    @RequestMapping("/test144")
     @ResponseBody
     public Student test14() {
         Student student = new Student("alan", 23);
@@ -316,7 +316,7 @@ public class ControllerUsage2 {
      * @return
      * @throws Exception
      */
-    @RequestMapping("/test15")
+    @RequestMapping("/test155")
     public ResponseEntity<byte[]> test15(HttpSession session) throws Exception {
         ServletContext servletContext = session.getServletContext();
         String realPath = servletContext.getRealPath("/static/img/1.jpg");
@@ -340,7 +340,7 @@ public class ControllerUsage2 {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/test16")
+    @RequestMapping("/test166")
     public String test16(MultipartFile file, HttpSession session) throws IOException {
         // 获取原始上传文件的文件名
         String filename = file.getOriginalFilename();
@@ -371,14 +371,14 @@ public class ControllerUsage2 {
         return "success";
     }
 
-    @RequestMapping("/test17")
+    @RequestMapping("/test177")
     public String test17() {
         // 模拟算术异常
         int val = 10 / 0;
         return "success";
     }
 
-    @RequestMapping("/test18")
+    @RequestMapping("/test188")
     public String test18() {
         String s = null;
         // 模拟空指针异常

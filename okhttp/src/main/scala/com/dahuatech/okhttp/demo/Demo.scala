@@ -3,6 +3,7 @@ package com.dahuatech.okhttp.demo
 import com.dahuatech.okhttp.utils.{MediaTypeEnum, OkHttpClientUtil}
 import com.squareup.okhttp.{MediaType, OkHttpClient, Request, RequestBody, Response, ResponseBody}
 
+import java.net.{HttpURLConnection, URL}
 import java.util.concurrent.{ExecutorService, Executors, TimeUnit}
 
 /**
@@ -19,18 +20,15 @@ object Demo {
   val okHttpClient: OkHttpClient = OkHttpClientUtil.getOkHttpClient
 
   def main(args: Array[String]): Unit = {
-    val requestBody: RequestBody = RequestBody.create(
-      MediaType.parse(MediaTypeEnum.APPLICATION_JSON_CHARSET_UTF_8.getValue),
-      "{\"name\": \"alan\", \"age\": 20}"
-    )
-
-    val request: Request = new Request.Builder()
-      .get()
-      .url("http://hadoop101:8888/human")
-      .build()
 
     while (true) {
+      val request: Request = new Request.Builder()
+        .get()
+        .url("http://localhost:8888/human")
+        .addHeader("connection", "keep-alive")
+        .build()
       okHttpClient.newCall(request).execute()
+      TimeUnit.MILLISECONDS.sleep(50L)
     }
 
   }

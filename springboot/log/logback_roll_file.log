@@ -1,0 +1,22 @@
+2024-05-12 12:47:16.837  INFO 48736 --- [restartedMain] c.dahuatech.springboot.MainApplication   : Starting MainApplication on R7000P with PID 48736 (D:\dev\idea\project\demo\springboot\target\classes started by alan in D:\dev\idea\project\demo)
+2024-05-12 12:47:16.845  INFO 48736 --- [restartedMain] c.dahuatech.springboot.MainApplication   : The following profiles are active: dev
+2024-05-12 12:47:16.899  INFO 48736 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-05-12 12:47:16.899  INFO 48736 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-05-12 12:47:17.765  INFO 48736 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8888 (http)
+2024-05-12 12:47:17.773  INFO 48736 --- [restartedMain] o.a.coyote.http11.Http11NioProtocol      : Initializing ProtocolHandler ["http-nio-8888"]
+2024-05-12 12:47:17.774  INFO 48736 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-05-12 12:47:17.774  INFO 48736 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.38]
+2024-05-12 12:47:17.776  INFO 48736 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : An older version [1.2.16] of the Apache Tomcat Native library is installed, while Tomcat recommends a minimum version of [1.2.23]
+2024-05-12 12:47:17.776  INFO 48736 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : Loaded Apache Tomcat Native library [1.2.16] using APR version [1.6.3].
+2024-05-12 12:47:17.777  INFO 48736 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : APR capabilities: IPv6 [true], sendfile [true], accept filters [false], random [true].
+2024-05-12 12:47:17.777  INFO 48736 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : APR/OpenSSL configuration: useAprConnector [false], useOpenSSL [true]
+2024-05-12 12:47:18.831  INFO 48736 --- [restartedMain] o.a.catalina.core.AprLifecycleListener   : OpenSSL successfully initialized [OpenSSL 1.0.2m  2 Nov 2017]
+2024-05-12 12:47:18.921  INFO 48736 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-05-12 12:47:18.921  INFO 48736 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2021 ms
+2024-05-12 12:47:19.079  INFO 48736 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2024-05-12 12:47:19.208  INFO 48736 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-05-12 12:47:19.219  INFO 48736 --- [restartedMain] o.a.coyote.http11.Http11NioProtocol      : Starting ProtocolHandler ["http-nio-8888"]
+2024-05-12 12:47:19.238  INFO 48736 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8888 (http) with context path ''
+2024-05-12 12:47:19.247  INFO 48736 --- [restartedMain] c.dahuatech.springboot.MainApplication   : Started MainApplication in 2.869 seconds (JVM running for 3.992)
+2024-05-12 12:47:19.250  INFO 48736 --- [restartedMain] c.dahuatech.springboot.MainApplication   : springboot start...
+2024-05-12 12:47:36.528  INFO 48736 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'

@@ -2,7 +2,7 @@ package com.dahuatech.spark.demo
 
 import com.alibaba.fastjson.{JSON, JSONArray, JSONObject}
 import com.dahuatech.spark.config.KafkaParamConfig
-import com.dahuatech.spark.utils.DateTimeUtil
+import com.dahuatech.spark.utils.{DateTimeUtil, SparkUtil}
 import org.apache.kafka.clients.consumer.{ConsumerRecord, ConsumerRecords}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.{DStream, InputDStream}
@@ -25,6 +25,19 @@ import org.slf4j.{Logger, LoggerFactory}
  */
 
 object SparkStreamDemo {
+  /**
+   * 提交任务命令示例
+   * spark-submit
+   * --master yarn
+   * --deploy-mode cluster
+   * --class com.dahuatech.spark.demo.SparkSQLDemo
+   * --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties
+   * --conf spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties
+   * --files log4j.properties
+   * spark-jar-with-dependencies.jar
+   * @param args
+   */
+
   private val logger: Logger = LoggerFactory.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {

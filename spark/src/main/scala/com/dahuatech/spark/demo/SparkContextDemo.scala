@@ -19,10 +19,24 @@ import org.slf4j.{Logger, LoggerFactory}
  */
 
 object SparkContextDemo {
+  /**
+   * 提交任务命令示例
+   * spark-submit
+   * --master yarn
+   * --deploy-mode cluster
+   * --class com.dahuatech.spark.demo.SparkSQLDemo
+   * --conf spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties
+   * --conf spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties
+   * --files log4j.properties
+   * spark-jar-with-dependencies.jar
+   * @param args
+   */
+
   private val logger: Logger = LoggerFactory.getLogger(this.getClass)
-  private val sparkSession: SparkSession = SparkUtil.getLocalSparkSession()
 
   def main(args: Array[String]): Unit = {
+    val sparkSession: SparkSession = SparkUtil.getLocalSparkSession()
+
     val originRDD: RDD[Long] = sparkSession.sparkContext.range(0, 10, 1, 5)
     val originListRDD: RDD[List[Long]] = originRDD.map(x => List(x, x))
     val originKeyValueRDD: RDD[(Long, Long)] = originRDD.map(x => (x, x))

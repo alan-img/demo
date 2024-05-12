@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
+// @RequestMapping("/base") // 给所有请求增加访问前缀
 public class TestController extends BaseController {
     @Autowired
     private Human human;

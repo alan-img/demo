@@ -5,6 +5,8 @@ import com.squareup.okhttp.{MediaType, OkHttpClient, Request, RequestBody, Respo
 
 import java.net.{HttpURLConnection, URL}
 import java.util.concurrent.{ExecutorService, Executors, TimeUnit}
+import scala.util.control.Breaks
+import scala.util.control.Breaks.break
 
 /**
  * <p>projectName: demo</p>
@@ -21,24 +23,24 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    while (true) {
-      val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"),
-        """
-          |{"name": "alan", "age": 23}
-          |""".stripMargin)
+    println(okHttpClient.getConnectionPool.getConnectionCount)
 
-      val request: Request = new Request.Builder()
-        .get()
-        .url("http://localhost:8888/get/12?name=alan")
-        .addHeader("connection", "keep-alive")
-        .build()
-      val response: Response = okHttpClient.newCall(request).execute()
-      println(response.protocol())
-      println(response.code())
-      println(response.message())
-      TimeUnit.MILLISECONDS.sleep(50L)
+    Breaks.breakable {
+      while (true) {
+        val request: Request = new Request.Builder()
+          .get()
+          .url("http://hadoop101:8888/get/12?name=alan")
+          .addHeader("connection", "keep-alive")
+          .build()
+        val response: Response = okHttpClient.newCall(request).execute()
+
+        println(response.code())
+        println(response.message())
+        TimeUnit.MILLISECONDS.sleep(50L)
+
+        Breaks.break()
+      }
     }
-
   }
 
   /**

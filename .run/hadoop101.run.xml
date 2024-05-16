@@ -14,7 +14,7 @@
     <option name="beforeShellScript" value="" />
     <option name="className" value="com.dahuatech.spark.demo.SparkSQLDemo" />
     <option name="clusterManager" value="YARN" />
-    <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.debug spark.driver.extraJavaOptions=-Dlog4j.configuration=/root/log4j.properties spark.executor.extraJavaOptions=-Dlog4j.debug spark.executor.extraJavaOptions=-Dlog4j.configuration=/root/log4j.properties " />
+    <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.configuration=/log4j.properties " />
     <option name="deployMode" value="CLUSTER" />
     <option name="driverClassPath">
       <list />
@@ -30,7 +30,12 @@
     <option name="executorCores" value="" />
     <option name="executorMemory" value="3G" />
     <option name="files">
-      <list />
+      <list>
+        <FilePath>
+          <option name="path" value="/root/spark-remote-home/log4j.properties" />
+          <option name="type" value="SERVER" />
+        </FilePath>
+      </list>
     </option>
     <option name="interactive" value="false" />
     <option name="jars">
@@ -82,7 +87,7 @@
       </FilePath>
     </option>
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="D:\dev\idea\project\demo\spark/pom.xml" goal="clean package" />
       <option name="SftpSparkFileUpload" enabled="true" />
     </method>
   </configuration>

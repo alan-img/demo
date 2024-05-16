@@ -50,7 +50,7 @@ public class OkHttpClientUtil {
                     okHttpClient.setHostnameVerifier((hostName, session) -> true);
                     okHttpClient.setRetryOnConnectionFailure(true);
                     // 设置连接池  最大连接数量  , 持续存活的连接
-                    okHttpClient.setConnectionPool(new ConnectionPool(10, 10, TimeUnit.MINUTES));
+                    okHttpClient.setConnectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES));
                 }
             }
         }

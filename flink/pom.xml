@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>template</artifactId>
+    <artifactId>flink</artifactId>
 
     <properties>
         <!-- 待自定义属性 -->

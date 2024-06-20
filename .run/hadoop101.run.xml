@@ -12,9 +12,9 @@
       </FilePath>
     </option>
     <option name="beforeShellScript" value="" />
-    <option name="className" value="com.dahuatech.spark.demo.SparkSQLDemo" />
+    <option name="className" value="com.dahuatech.spark.demo.SparkPureTestCanDiscard" />
     <option name="clusterManager" value="YARN" />
-    <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.configuration=/log4j.properties " />
+    <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties " />
     <option name="deployMode" value="CLUSTER" />
     <option name="driverClassPath">
       <list />
@@ -27,7 +27,7 @@
     <option name="driverMemory" value="1G" />
     <option name="envParams" value="" />
     <option name="excludePackages" value="" />
-    <option name="executorCores" value="" />
+    <option name="executorCores" value="3" />
     <option name="executorMemory" value="3G" />
     <option name="files">
       <list>
@@ -87,7 +87,7 @@
       </FilePath>
     </option>
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="D:\dev\idea\project\demo\spark/pom.xml" goal="clean package" />
+      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/spark/pom.xml" goal="package" />
       <option name="SftpSparkFileUpload" enabled="true" />
     </method>
   </configuration>

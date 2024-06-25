@@ -1,9 +1,11 @@
 package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
-import org.apache.spark.rdd
+import org.apache.spark.broadcast.Broadcast
+import org.apache.spark.{SPARK_BRANCH, rdd}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+import org.apache.spark.util.LongAccumulator
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
@@ -18,23 +20,24 @@ import org.slf4j.{Logger, LoggerFactory}
  */
 
 object SparkSubmitRemoteDemo {
-  private val logger: Logger = LoggerFactory.getLogger(this.getClass)
+  private val log: Logger = LoggerFactory.getLogger(this.getClass)
 
   def main(args: Array[String]): Unit = {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    val originRDD: RDD[Long] = sparkSession.sparkContext.range(0, 2456558, 1, 1)
+    val df: DataFrame = sparkSession.sql(
+      """
+        |select * from test
+        |""".stripMargin)
 
-    // originRDD.map(x => (SparkUtil.generateRandomString(50), x, "2024"))
-    //   .toDF("name", "age", "dt").write.partitionBy("dt").mode(SaveMode.Overwrite).saveAsTable("adv")
-    //
-    // sparkSession.sparkContext.range(0, 2933203, 1, 1).map(x => (SparkUtil.generateRandomString(50), x, "2024"))
-    //   .toDF("name", "age", "dt").write.partitionBy("dt").mode(SaveMode.Append).saveAsTable("adv")
-    //
-    // sparkSession.sparkContext.range(0, 1500000, 1, 1).map(x => (SparkUtil.generateRandomString(50), x, "2024"))
-    //   .toDF("name", "age", "dt").write.partitionBy("dt").mode(SaveMode.Append).saveAsTable("adv")
+    df.show(100, false)
 
-    println(sparkSession.read.table("adv").rdd.getNumPartitions)
+    import org.apache.spark.sql.functions._
+    df.select($"name", 'name, df("name"), df.col("name"))
+      .withColumn("newCol", lit("alan"))
+      .withColumnRenamed("age", "newAge")
+      .show()
+
   }
 }

@@ -1,5 +1,6 @@
 package com.dahuatech.spark.utils
 
+import javolution.util.StandardLog.config
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext, TaskContext}
@@ -23,12 +24,33 @@ object SparkUtil {
 
   def getLocalSparkSession(): SparkSession = {
     val sparkConf: SparkConf = new SparkConf().setMaster("local[*]").setAppName(getClass.getName)
-    SparkSession.builder().config(sparkConf).getOrCreate()
+    SparkSession.builder()
+      .config(sparkConf)
+      .config("hive.exec.dynamic.partition", "true")
+      .config("hive.exec.dynamic.partition.mode", "nonstrict")
+      /**
+       * 使用纯spark sql语句时可以动态分区覆盖分区的数据 而不是覆盖整个表 类似于hive的动态分区
+       * insert overwrite table adv values ('alan', 10, '2024'),('alan1', 10, '2025')
+       * 这个语法只会覆盖2024和2025分区
+       */
+      .config("spark.sql.sources.partitionOverwriteMode", "dynamic")
+      .getOrCreate()
   }
 
   def getSparkSession(): SparkSession = {
     val sparkConf: SparkConf = new SparkConf().setAppName(getClass.getName)
-    SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate()
+    SparkSession.builder()
+      .config(sparkConf)
+      .config("hive.exec.dynamic.partition", "true")
+      .config("hive.exec.dynamic.partition.mode", "nonstrict")
+      /**
+       * 使用纯spark sql语句时可以动态分区覆盖分区的数据 而不是覆盖整个表 类似于hive的动态分区
+       * insert overwrite table adv values ('alan', 10, '2024'),('alan1', 10, '2025')
+       * 这个语法只会覆盖2024和2025分区
+       */
+      .config("spark.sql.sources.partitionOverwriteMode", "dynamic")
+      .enableHiveSupport()
+      .getOrCreate()
   }
 
   def getLocalSparkContent(): SparkContext = {

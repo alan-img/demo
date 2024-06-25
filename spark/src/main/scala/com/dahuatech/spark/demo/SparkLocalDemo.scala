@@ -1,11 +1,14 @@
 package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
-import com.dahuatech.spark.utils.SparkUtil.getLocalSparkContent
-import org.apache.spark.{SparkContext, TaskContext}
+import com.dahuatech.spark.utils.SparkUtil.{getLocalSparkContent, showPartition}
+import org.apache.spark.{HashPartitioner, Partitioner, SparkContext, TaskContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.slf4j.{Logger, LoggerFactory}
+
+import scala.collection.{LinearSeq, mutable}
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 /**
  * <p>projectName: demo</p>
@@ -24,8 +27,14 @@ object SparkLocalDemo {
   def main(args: Array[String]): Unit = {
     val sparkContext: SparkContext = getLocalSparkContent()
 
-    val rdd: RDD[String] = sparkContext.textFile("D:\\dev\\idea\\project\\demo\\spark\\data")
-    println(rdd.getNumPartitions)
+    val originRDD: RDD[Long] = sparkContext.range(1, 5, 1, 2)
+
+    originRDD.cache()
+    println(originRDD.dependencies)
+
+    val originListRDD: RDD[List[Long]] = originRDD.map(x => List(x, x))
+
+    val originKeyValueRDD: RDD[(Long, Long)] = originRDD.map(x => (x, x))
 
   }
 }

@@ -36,5 +36,6 @@ object SparkLocalDemo {
 
     val originKeyValueRDD: RDD[(Long, Long)] = originRDD.map(x => (x, x))
 
+
   }
 }

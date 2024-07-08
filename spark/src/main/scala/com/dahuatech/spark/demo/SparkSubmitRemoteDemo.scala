@@ -31,5 +31,6 @@ object SparkSubmitRemoteDemo {
       x
     }).collect()
 
+
   }
 }

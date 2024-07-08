@@ -35,10 +35,7 @@ object SparkSQLDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
 
     val df: DataFrame = sparkSession.read.table("default.stu")
-    println(df.rdd.getNumPartitions)
-    df.rdd.foreachPartition(iter => {
-      println(iter.size)
-      iter
-    })
+
+    sparkSession.close()
   }
 }

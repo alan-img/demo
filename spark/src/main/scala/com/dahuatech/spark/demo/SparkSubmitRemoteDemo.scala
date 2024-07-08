@@ -2,14 +2,11 @@ package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
 import org.apache.spark.broadcast.Broadcast
-import org.apache.spark.{SPARK_BRANCH, TaskContext, rdd}
+import org.apache.spark.{SPARK_BRANCH, rdd}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.util.LongAccumulator
 import org.slf4j.{Logger, LoggerFactory}
-
-import scala.collection.JavaConverters._
-import scala.collection.mutable.ArrayBuffer
 
 /**
  * <p>projectName: demo</p>
@@ -29,8 +26,10 @@ object SparkSubmitRemoteDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    Seq(("alam", 20, "2024")).toDF("name", "age", "dt").write.format("parquet").mode(SaveMode.Overwrite).insertInto("demo")
+    sparkSession.range(0, 10, 1, 2).map(x => {
+      throw new RuntimeException("alan")
+      x
+    }).collect()
 
-    sparkSession.close()
   }
 }

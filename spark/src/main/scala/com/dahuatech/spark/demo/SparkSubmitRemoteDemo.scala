@@ -26,11 +26,13 @@ object SparkSubmitRemoteDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    sparkSession.range(0, 10, 1, 2).map(x => {
-      throw new RuntimeException("alan")
-      x
-    }).collect()
+    val test: DataFrame = sparkSession.read.table("test")
+    val test1: DataFrame = sparkSession.read.table("test1")
 
+    val df: DataFrame = test.join(test1, test("dossier_id") === test1.col("dossierId"), "left_anti")
+    df.show()
+
+    println(df.count())
 
   }
 }

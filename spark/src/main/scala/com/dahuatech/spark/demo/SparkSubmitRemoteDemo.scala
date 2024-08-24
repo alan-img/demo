@@ -33,6 +33,7 @@ object SparkSubmitRemoteDemo {
     df.show()
 
     println(df.count())
+    println(df.count())
 
   }
 }

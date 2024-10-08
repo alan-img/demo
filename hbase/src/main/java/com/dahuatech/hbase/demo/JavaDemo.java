@@ -22,40 +22,19 @@ import java.util.Scanner;
  */
 public class JavaDemo {
     public static void main(String[] args) throws IOException {
-        // Admin admin = HbaseUtil.connection.getAdmin();
-        // NamespaceDescriptor namespaceDescriptor = NamespaceDescriptor.create("test").build();
-        // admin.createNamespace(namespaceDescriptor);
-        // System.out.println(admin.tableExists(TableName.valueOf("default:stu")));
-        // TableDescriptor tableDescriptor = TableDescriptorBuilder
-        //         .newBuilder(TableName.valueOf("default:test"))
-        //         .setColumnFamily(ColumnFamilyDescriptorBuilder.newBuilder(Bytes.toBytes("info")).build())
-        //         .build();
-        // admin.createTable(tableDescriptor);
-        // admin.disableTable(TableName.valueOf("test"));
-        // admin.deleteTable(TableName.valueOf("test"));
-        // admin.close();
+        initEnv();
+    }
 
-        Table table = HbaseUtil.connection.getTable(TableName.valueOf("stu"));
-        // Put put = new Put(Bytes.toBytes("1006"));
-        // put.addColumn(Bytes.toBytes("info"), Bytes.toBytes("name"), Bytes.toBytes("alan"));
-        // table.put(put);
-
-        // ArrayList<Get> list = new ArrayList<>();
-        // list.add(new Get(Bytes.toBytes("1001")));
-        // Result[] results = table.get(list);
-        // for (Result result : results) {
-        //     Cell[] cells = result.rawCells();
-        //     for (Cell cell : cells) {
-        //         System.out.println(new String(CellUtil.cloneRow(cell)));
-        //     }
-        // }
-
-        // Scanner scanner = new Scanner();
-        // table.getScanner()
-
-        Delete delete = new Delete(Bytes.toBytes("1006"));
-        table.delete(delete);
-
-        table.close();
+    public static void initEnv() throws IOException {
+        HbaseUtil hbaseUtil = new HbaseUtil();
+        // 1、删除所有表
+        hbaseUtil.deleteAllTable();
+        // 2、新建表
+        hbaseUtil.createTable("default", "stu", "info");
+        // 3、插入数据
+        for (int i = 0; i < 10; i++) {
+            hbaseUtil.insert("default", "stu", i + "", "info", "name", i + "alan");
+            hbaseUtil.insert("default", "stu", i + "", "info", "age", i + 20 + "");
+        }
     }
 }

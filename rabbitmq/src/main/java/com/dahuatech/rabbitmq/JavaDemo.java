@@ -4,6 +4,8 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,17 +34,15 @@ public class JavaDemo {
         connectionFactory.setUsername(USERNAME);
         connectionFactory.setPassword(PASSWORD);
 
-        try (Connection connection = connectionFactory.newConnection();
-             Channel channel = connection.createChannel()) {
+        Connection connection = connectionFactory.newConnection();
+        Channel channel = connection.createChannel();
+        channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE, true);
 
-            channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE, true);
-
-            while (true) {
-                String msg = "hello";
-                channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY + 1, null, msg.getBytes("UTF-8"));
-                TimeUnit.MILLISECONDS.sleep(500L);
-            }
-
+        while (true) {
+            String msg = "hello";
+            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY + 1, null, msg.getBytes("UTF-8"));
+            TimeUnit.MILLISECONDS.sleep(500L);
         }
+
     }
 }

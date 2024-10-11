@@ -29,6 +29,7 @@
         <module>hiveserver2</module>
         <module>parquet</module>
         <module>flink</module>
+        <module>rabbitmq</module>
     </modules>
     <name>demo project</name>
     <description>demo project for multiplex</description>

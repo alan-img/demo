@@ -4,14 +4,13 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.rabbitmq</p>
- * <p>className: JavaDemo</p>
+ * <p>className: RabbitMQProducer</p>
  * <p>date: 2024/10/11</p>
  *
  * @author qinjiawei(Administrator)
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @since JDK8.0
  */
 
-public class JavaDemo {
+public class RabbitMQProducer {
     private final static String HOST = "192.168.101.222";
     private final static String USERNAME = "root";
     private final static String PASSWORD = "root";
@@ -34,14 +33,17 @@ public class JavaDemo {
         connectionFactory.setUsername(USERNAME);
         connectionFactory.setPassword(PASSWORD);
 
-        Connection connection = connectionFactory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE, true);
 
-        while (true) {
-            String msg = "hello";
-            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY + 1, null, msg.getBytes("UTF-8"));
-            TimeUnit.MILLISECONDS.sleep(500L);
+        try(Connection connection = connectionFactory.newConnection();
+            Channel channel = connection.createChannel()) {
+            channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE, true);
+
+            while (true) {
+                Random random = new Random();
+                String msg = random.nextInt() + "hello";
+                channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY + 1, null, msg.getBytes("UTF-8"));
+                TimeUnit.MILLISECONDS.sleep(500L);
+            }
         }
 
     }

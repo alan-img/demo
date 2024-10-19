@@ -4,8 +4,6 @@ import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala._
 import org.slf4j.LoggerFactory
 
-import scala.sys.env
-
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.flink.demo</p>
@@ -22,7 +20,8 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    unboundedStream(args)
+    // unboundedStream(args)
+    boundedStream()
 
   }
 
@@ -36,7 +35,7 @@ object Demo {
     env.execute()
   }
 
-  def boundStream(): Unit = {
+  def boundedStream(): Unit = {
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     val dataStream: DataStream[String] = env.readTextFile("D:\\dev\\idea\\project\\demo\\flink\\src\\main\\resources\\word.txt")
     val keyedStream: KeyedStream[(String, Int), String] = dataStream.flatMap(_.split(" ")).map(word => (word, 1)).keyBy(_._1)

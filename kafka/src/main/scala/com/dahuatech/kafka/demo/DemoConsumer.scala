@@ -21,7 +21,7 @@ object DemoConsumer {
 
     try {
       while (true) {
-        val consumerRecords: ConsumerRecords[String, String] = kafkaConsumer.poll(Duration.ofMillis(100L))
+        val consumerRecords: ConsumerRecords[String, String] = kafkaConsumer.poll(Duration.ofMillis(10000L))
         consumerRecords.foreach {
           consumerRecords => {
             println(s"topic: ${consumerRecords.topic()}, " +

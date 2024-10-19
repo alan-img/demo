@@ -1,7 +1,7 @@
 package com.dahuatech.codeblock.timer
 
 import java.util.concurrent.{Executors, ScheduledExecutorService, TimeUnit}
-import java.util.{Timer, TimerTask}
+// import java.util.{Timer, TimerTask}
 
 /**
  * <p>projectName: demo</p>
@@ -41,20 +41,20 @@ object Timer {
     }, 0, 1, TimeUnit.SECONDS)
   }
 
-  def timerSchedule(): Unit = {
-    // 第一次执行延迟0秒 没1秒执行一次
-    val timer = new Timer()
-    timer.schedule(new TimerTask {
-      override def run(): Unit = println("alan")
-    }, 0L)
-
-    // 可以指定首次执行时间
-    // timer.schedule(timerTask, DateUtils.addSeconds(new Date(), 5), period);
-
-    Thread.sleep(5000L)
-    // 终止调度任务
-    timer.cancel()
-    // 移除调度任务
-    timer.purge()
-  }
+  // def timerSchedule(): Unit = {
+  //   // 第一次执行延迟0秒 没1秒执行一次
+  //   val timer = new Timer()
+  //   timer.schedule(new TimerTask {
+  //     override def run(): Unit = println("alan")
+  //   }, 0L)
+  //
+  //   // 可以指定首次执行时间
+  //   // timer.schedule(timerTask, DateUtils.addSeconds(new Date(), 5), period);
+  //
+  //   Thread.sleep(5000L)
+  //   // 终止调度任务
+  //   timer.cancel()
+  //   // 移除调度任务
+  //   timer.purge()
+  // }
 }

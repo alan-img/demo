@@ -1,8 +1,13 @@
 package com.dahuatech.flink.demo
 
+import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.LoggerFactory
+
+import java.util.Properties
 
 /**
  * <p>projectName: demo</p>
@@ -20,9 +25,22 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    // unboundedStream(args)
-    boundedStream()
+    fromKafkaReadData(args)
 
+  }
+
+  def fromKafkaReadData(args: Array[String]): Unit = {
+    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    val properties: Properties = new Properties()
+    properties.setProperty("bootstrap.servers", "hadoop101:9092,hadoop102:9092,hadoop103:9092")
+    properties.setProperty("group.id", "flink.kafka.consumer.group")
+    properties.setProperty("key.deserializer", classOf[StringDeserializer].getName)
+    properties.setProperty("value.deserializer", classOf[StringDeserializer].getName)
+    properties.setProperty("auto.offset.reset", "latest")
+    val kafkaDataStream: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String](parameterTool.get("topic.name", "first"), new SimpleStringSchema(), properties))
+    kafkaDataStream.print()
+    env.execute()
   }
 
   def unboundedStream(args: Array[String]): Unit = {

@@ -1,6 +1,7 @@
 package com.dahuatech.flink.demo
 
 import akka.remote.WireFormats.TimeUnit
+import org.apache.flink.api.common.functions.MapFunction
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.functions.source.SourceFunction
@@ -10,6 +11,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.LoggerFactory
 
 import java.util.Properties
+import scala.collection.mutable
 
 /**
  * <p>projectName: demo</p>
@@ -27,9 +29,23 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    fromCustomDataSource(args)
+    operator(args)
+    // fromCustomDataSource(args)
     // fromKafkaReadData(args)
 
+  }
+
+  def operator(args: Array[String]): Unit = {
+    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[String] = env.socketTextStream("hadoop101", 9999)
+    dataStream.map(new MapFunction[String, mutable.Buffer[String]] {
+      override def map(value: String): mutable.Buffer[String] = {
+        value.split(" ").toBuffer
+      }
+    }).print()
+    env.execute()
   }
 
   def fromCustomDataSource(args: Array[String]): Unit = {

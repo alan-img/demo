@@ -1,7 +1,9 @@
 package com.dahuatech.flink.demo
 
+import akka.remote.WireFormats.TimeUnit
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
+import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -25,8 +27,29 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-    fromKafkaReadData(args)
+    fromCustomDataSource(args)
+    // fromKafkaReadData(args)
 
+  }
+
+  def fromCustomDataSource(args: Array[String]): Unit = {
+    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    val dataSource: DataStream[String] = env.addSource(new SourceFunction[String] {
+      private var isRunning = true
+
+      override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
+        while (isRunning) {
+          ctx.collect("alan")
+        }
+      }
+
+      override def cancel(): Unit = {
+        isRunning = false
+      }
+    })
+    dataSource.print()
+    env.execute()
   }
 
   def fromKafkaReadData(args: Array[String]): Unit = {

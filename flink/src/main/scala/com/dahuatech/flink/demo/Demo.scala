@@ -53,7 +53,10 @@ object Demo {
   }
 
   def flinkSinkToCustomSystem(args: Array[String]): Unit = {
-    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    // val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    val conf = new Configuration()
+    conf.setString(RestOptions.BIND_PORT, "8080")
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf)
     env.setParallelism(1)
     val dataStream: DataStream[String] = env.addSource(new SourceFunction[String] {
       private var isRunning: Boolean = true
@@ -197,7 +200,6 @@ object Demo {
   }
 
   def operator(args: Array[String]): Unit = {
-    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     // val dataStream: DataStream[String] = env.addSource(new RichParallelSourceFunction[String] {
     //   private var isRunning: Boolean = true

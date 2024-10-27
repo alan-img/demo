@@ -1,11 +1,10 @@
 package com.dahuatech.flink.demo
 
-import akka.actor.TypedActor.context
-import akka.remote.WireFormats.TimeUnit
+import org.apache.flink.api.common.eventtime.{SerializableTimestampAssigner, TimestampAssigner, TimestampAssignerSupplier, Watermark, WatermarkGenerator, WatermarkGeneratorSupplier, WatermarkOutput, WatermarkStrategy}
 import org.apache.flink.api.common.functions.{FilterFunction, FlatMapFunction, IterationRuntimeContext, MapFunction, Partitioner, RichMapFunction, RuntimeContext}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
 import org.apache.flink.api.java.utils.ParameterTool
-import org.apache.flink.configuration.Configuration
+import org.apache.flink.configuration.{Configuration, RestOptions}
 import org.apache.flink.connector.jdbc.{JdbcConnectionOptions, JdbcSink, JdbcStatementBuilder}
 import org.apache.flink.core.fs.Path
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
@@ -21,8 +20,10 @@ import org.slf4j.LoggerFactory
 import sun.nio.cs.StandardCharsets
 
 import java.sql.PreparedStatement
+import java.time.Duration
 import java.util
 import java.util.Properties
+import java.util.concurrent.TimeUnit
 import scala.collection.mutable
 import scala.util.Random
 
@@ -42,14 +43,90 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
+    // val conf = new Configuration()
+    // conf.setString(RestOptions.BIND_PORT, "8080")
+    // val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf)
+
     // fromKafkaReadData(args)
     // fromCustomDataSource(args)
     // operator(args)
     // flinkSinkToFile(args)
     // flinkSinkToKafka(args)
     // flinkSinkToJDBC(args)
-    flinkSinkToCustomSystem(args)
+    // flinkSinkToCustomSystem(args)
+    // flinkGenerateWaterMark(args)
+    flinkCustomWatermarkGenerateStragegy(args)
 
+  }
+
+  def flinkCustomWatermarkGenerateStragegy(args: Array[String]): Unit = {
+    def flinkGenerateWaterMark(array: Array[String]): Unit = {
+      val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+      env.getConfig.setAutoWatermarkInterval(100L)
+      env.setParallelism(1)
+      val dataStream: DataStream[(String, Long)] = env.addSource(new SourceFunction[(String, Long)] {
+        override def run(ctx: SourceFunction.SourceContext[(String, Long)]): Unit = {
+          val array: Array[String] = Array("alan", "adam", "jack", "jane")
+          while (true) {
+            ctx.collect((array(Random.nextInt(4)), System.currentTimeMillis()))
+            TimeUnit.MILLISECONDS.sleep(100L)
+          }
+        }
+
+        override def cancel(): Unit = {}
+      })
+      dataStream.assignTimestampsAndWatermarks(new WatermarkStrategy[(String, Long)] {
+        override def createTimestampAssigner(context: TimestampAssignerSupplier.Context): TimestampAssigner[(String, Long)] = {
+          super.createTimestampAssigner(context)
+          new SerializableTimestampAssigner[(String, Long)] {
+            override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = element._2
+          }
+        }
+
+        override def createWatermarkGenerator(context: WatermarkGeneratorSupplier.Context): WatermarkGenerator[(String, Long)] = {
+          new WatermarkGenerator[(String, Long)] {
+            private var delay: Long = TimeUnit.SECONDS.toMillis(5)
+            private var maxWatermark: Long = Long.MinValue + delay + 1
+
+            override def onEvent(event: (String, Long), eventTimestamp: Long, output: WatermarkOutput): Unit = {
+              maxWatermark = math.max(maxWatermark, event._2)
+            }
+
+            override def onPeriodicEmit(output: WatermarkOutput): Unit = {
+              val watermark: Watermark = new Watermark(maxWatermark - delay - 1)
+              output.emitWatermark(watermark)
+            }
+          }
+        }
+      })
+      env.execute()
+    }
+  }
+
+  def flinkGenerateWaterMark(array: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.getConfig.setAutoWatermarkInterval(100L)
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env.addSource(new SourceFunction[(String, Long)] {
+      override def run(ctx: SourceFunction.SourceContext[(String, Long)]): Unit = {
+        val array: Array[String] = Array("alan", "adam", "jack", "jane")
+        while (true) {
+          ctx.collect((array(Random.nextInt(4)), System.currentTimeMillis()))
+          TimeUnit.MILLISECONDS.sleep(100L)
+        }
+      }
+
+      override def cancel(): Unit = {}
+    })
+    dataStream.assignTimestampsAndWatermarks(
+      WatermarkStrategy.forBoundedOutOfOrderness[(String, Long)](Duration.ofSeconds(5))
+        .withTimestampAssigner(new SerializableTimestampAssigner[(String, Long)] {
+          override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = {
+            element._2
+          }
+        })
+    ).print()
+    env.execute()
   }
 
   def flinkSinkToCustomSystem(args: Array[String]): Unit = {

@@ -68,6 +68,7 @@ object DemoProducer {
 
   def main(args: Array[String]): Unit = {
     while (true) {
+      TimeUnit.MILLISECONDS.sleep(100L)
       val random: Int = new Random().nextInt(3)
       kafkaProducer.send(
         new ProducerRecord[String, String](

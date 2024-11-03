@@ -70,7 +70,12 @@ object DemoProducer {
     while (true) {
       val random: Int = new Random().nextInt(3)
       kafkaProducer.send(
-        new ProducerRecord[String, String](topicName, random, random + "", generateRandomString(20)),
+        new ProducerRecord[String, String](
+          topicName,
+          random,
+          random.toString,
+          generateRandomString(20)
+        ),
         new Callback {
           override def onCompletion(metadata: RecordMetadata, exception: Exception): Unit = {
             if (Objects.isNull(exception)) {
@@ -81,8 +86,6 @@ object DemoProducer {
           }
         }
       )
-
-      println("alan")
     }
 
     kafkaProducer.close()

@@ -2,6 +2,9 @@ package com.dahuatech.test.demo
 
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.collection.immutable.HashMap
+import scala.collection.parallel.immutable
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech</p>
@@ -35,13 +38,8 @@ object Demo {
   private val logger: Logger = LoggerFactory.getLogger(getClass)
 
   def main(args: Array[String]): Unit = {
-    println("start...")
-    try {
-      throw new OutOfMemoryError("alan")
-    } catch {
-      case err: OutOfMemoryError =>
-        logger.error(s"happened error", err)
-    }
-    println("end...")
+
+
+
   }
 }

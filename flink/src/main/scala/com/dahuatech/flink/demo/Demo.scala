@@ -1,23 +1,33 @@
 package com.dahuatech.flink.demo
 
-import org.apache.flink.api.common.eventtime.{SerializableTimestampAssigner, TimestampAssigner, TimestampAssignerSupplier, Watermark, WatermarkGenerator, WatermarkGeneratorSupplier, WatermarkOutput, WatermarkStrategy}
-import org.apache.flink.api.common.functions.{FilterFunction, FlatMapFunction, IterationRuntimeContext, MapFunction, Partitioner, RichMapFunction, RuntimeContext}
+import org.apache.flink.api.common.eventtime.{BoundedOutOfOrdernessWatermarks, SerializableTimestampAssigner, TimestampAssigner, TimestampAssignerSupplier, Watermark, WatermarkGenerator, WatermarkGeneratorSupplier, WatermarkOutput, WatermarkStrategy}
+import org.apache.flink.api.common.functions.{AggregateFunction, FilterFunction, FlatMapFunction, IterationRuntimeContext, MapFunction, Partitioner, ReduceFunction, RichMapFunction, RuntimeContext}
 import org.apache.flink.api.common.serialization.{SimpleStringEncoder, SimpleStringSchema}
+import org.apache.flink.api.common.state.{AggregatingState, AggregatingStateDescriptor, ListState, ListStateDescriptor, ReducingState, ReducingStateDescriptor, ValueState, ValueStateDescriptor}
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.configuration.{Configuration, RestOptions}
 import org.apache.flink.connector.jdbc.{JdbcConnectionOptions, JdbcSink, JdbcStatementBuilder}
 import org.apache.flink.core.fs.Path
+import org.apache.flink.streaming.api.functions.{KeyedProcessFunction, ProcessFunction}
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
 import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy
 import org.apache.flink.streaming.api.functions.source.{ParallelSourceFunction, RichParallelSourceFunction, SourceFunction}
 import org.apache.flink.streaming.api.scala._
+import org.apache.flink.streaming.api.scala.function.{ProcessAllWindowFunction, ProcessWindowFunction}
+import org.apache.flink.streaming.api.windowing.assigners.{SlidingEventTimeWindows, TumblingEventTimeWindows, TumblingProcessingTimeWindows}
+import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.flink.streaming.api.windowing.triggers.CountTrigger
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
+import org.apache.flink.table.api.Table
+import org.apache.flink.table.api.bridge.scala.StreamTableEnvironment
 import org.apache.flink.util.Collector
 import org.apache.kafka.common.Cluster
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.LoggerFactory
 import sun.nio.cs.StandardCharsets
+import org.apache.flink.table.api.Expressions.$
 
 import java.sql.PreparedStatement
 import java.time.Duration
@@ -25,6 +35,7 @@ import java.util
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 import scala.collection.mutable
+import scala.sys.env
 import scala.util.Random
 
 /**
@@ -55,52 +66,338 @@ object Demo {
     // flinkSinkToJDBC(args)
     // flinkSinkToCustomSystem(args)
     // flinkGenerateWaterMark(args)
-    flinkCustomWatermarkGenerateStragegy(args)
+    // flinkCustomWatermarkGenerateStragegy(args)
+    // flinkWindowUsing(args)
+    // flinkProcessAllWindowFunctionUsing(args)
+    // flinkProcessKeyedWindowFunctionUsing(args)
+    // flinkConnectAPIUsing(args)
+    // flinkCheckPointUsing(args)
+    // flinkSQLUsaging(args)
+    flinkSQLInputOutputData(args)
 
   }
 
-  def flinkCustomWatermarkGenerateStragegy(args: Array[String]): Unit = {
-    def flinkGenerateWaterMark(array: Array[String]): Unit = {
-      val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-      env.getConfig.setAutoWatermarkInterval(100L)
-      env.setParallelism(1)
-      val dataStream: DataStream[(String, Long)] = env.addSource(new SourceFunction[(String, Long)] {
-        override def run(ctx: SourceFunction.SourceContext[(String, Long)]): Unit = {
-          val array: Array[String] = Array("alan", "adam", "jack", "jane")
+  def flinkSQLInputOutputData(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val tableEnv: StreamTableEnvironment = StreamTableEnvironment.create(env)
+    // 创建输入表
+    tableEnv.executeSql(
+      """
+        |create table demo(name string, age bigint)
+        |with('connector' = 'filesystem', 'path' = 'D:\dev\idea\project\demo\flink\src\main\resources\word.txt', 'format' = 'csv')
+        |""".stripMargin)
+
+    // 方式一：查询数据 推荐
+    val table: Table = tableEnv.sqlQuery("select name from demo")
+    tableEnv.toDataStream(table).print()
+    // tableEnv.createTemporaryView("tmpTable", table)
+
+    // 方式二：查询数据 不推荐
+    // val demoTable: Table = tableEnv.from("demo")
+    // tableEnv.toDataStream(demoTable.select($("name"))).print()
+
+    // 创建输出表
+    tableEnv.executeSql(
+      """
+        |create table demo_output(name string)
+        |with('connector' = 'filesystem', 'path' = 'D:\dev\idea\project\demo\flink\src\main\resources\word_output.txt', 'format' = 'csv')
+        |""".stripMargin)
+
+    // executeInsert出发执行
+    table.executeInsert("demo_output")
+  }
+
+  def flinkSQLUsaging(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long, Long)] = env
+      .addSource(new SourceFunction[String] {
+        private var index = 0
+        private val list = Array("alan", "adam", "jane", "jack")
+
+        override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
           while (true) {
-            ctx.collect((array(Random.nextInt(4)), System.currentTimeMillis()))
-            TimeUnit.MILLISECONDS.sleep(100L)
+            ctx.collect(list(index))
+            index += 1
+            if (index >= list.length) index = 0
+            TimeUnit.MILLISECONDS.sleep(500L)
           }
         }
 
-        override def cancel(): Unit = {}
+        override def cancel(): Unit = ???
       })
-      dataStream.assignTimestampsAndWatermarks(new WatermarkStrategy[(String, Long)] {
-        override def createTimestampAssigner(context: TimestampAssignerSupplier.Context): TimestampAssigner[(String, Long)] = {
-          super.createTimestampAssigner(context)
-          new SerializableTimestampAssigner[(String, Long)] {
-            override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = element._2
+      .map(name => (name, System.currentTimeMillis(), Random.nextInt(100).toLong))
+
+    val tableEnv: StreamTableEnvironment = StreamTableEnvironment.create(env)
+    val table: Table = tableEnv.fromDataStream(dataStream).as("name", "timestamp", "price")
+    // 基于tableEnv写对象 纯SQL 更经常使用
+    tableEnv.toDataStream(
+      tableEnv.sqlQuery(s"select name, price from ${table}")
+    ).print()
+    // 基于table对象处理 DSL 不常用
+    // tableEnv.toDataStream(table.select($("name"), $("price"))).print()
+
+    env.execute()
+  }
+
+  def flinkCheckPointUsing(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env
+      .addSource(new SourceFunction[String] {
+        private var index = 0
+        private val list = Array("alan", "adam", "jane", "jack")
+
+        override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
+          while (true) {
+            ctx.collect(list(index))
+            index += 1
+            if (index >= list.length) index = 0
+            TimeUnit.MILLISECONDS.sleep(500L)
           }
         }
 
-        override def createWatermarkGenerator(context: WatermarkGeneratorSupplier.Context): WatermarkGenerator[(String, Long)] = {
-          new WatermarkGenerator[(String, Long)] {
-            private var delay: Long = TimeUnit.SECONDS.toMillis(5)
-            private var maxWatermark: Long = Long.MinValue + delay + 1
+        override def cancel(): Unit = ???
+      }).map(x => (x, System.currentTimeMillis()))
 
-            override def onEvent(event: (String, Long), eventTimestamp: Long, output: WatermarkOutput): Unit = {
-              maxWatermark = math.max(maxWatermark, event._2)
-            }
+    dataStream
+      .assignAscendingTimestamps(_._2)
+      .map(_._1)
+      .keyBy(x => x)
+      .process(new KeyedProcessFunction[String, String, String] {
+        private lazy val valueState = getRuntimeContext.getState(new ValueStateDescriptor[Long]("valueState", classOf[Long]))
+        private lazy val timerFlagState = getRuntimeContext.getState(new ValueStateDescriptor[Long]("timerFlagState", classOf[Long]))
 
-            override def onPeriodicEmit(output: WatermarkOutput): Unit = {
-              val watermark: Watermark = new Watermark(maxWatermark - delay - 1)
-              output.emitWatermark(watermark)
-            }
+        override def processElement(value: String, ctx: KeyedProcessFunction[String, String, String]#Context, out: Collector[String]): Unit = {
+          valueState.update(valueState.value() + 1)
+
+          if (timerFlagState.value() == 0L) {
+            ctx.timerService().registerEventTimeTimer(ctx.timestamp() + 1000 * 2)
+            timerFlagState.update(ctx.timestamp() + 1000 * 2)
           }
+        }
+
+        override def onTimer(timestamp: Long, ctx: KeyedProcessFunction[String, String, String]#OnTimerContext, out: Collector[String]): Unit = {
+          super.onTimer(timestamp, ctx, out)
+          out.collect(valueState.value().toString)
+          timerFlagState.clear()
         }
       })
-      env.execute()
-    }
+      .print()
+
+    env.execute()
+  }
+
+  def flinkConnectAPIUsing(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env
+      .addSource(new SourceFunction[String] {
+        private var index = 0
+        private val list = Array("alan", "adam", "jane", "jack")
+
+        override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
+          while (true) {
+            ctx.collect(list(index))
+            index += 1
+            if (index >= list.length) index = 0
+            TimeUnit.MILLISECONDS.sleep(500L)
+          }
+        }
+
+        override def cancel(): Unit = ???
+      }).map(x => (x, System.currentTimeMillis()))
+
+    dataStream
+      .assignAscendingTimestamps(_._2)
+      .map(_._1)
+      .keyBy(x => x)
+      .process(new KeyedProcessFunction[String, String, String] {
+        private lazy val valueState = getRuntimeContext.getState(new ValueStateDescriptor[Long]("valueState", classOf[Long]))
+        private lazy val timerFlagState = getRuntimeContext.getState(new ValueStateDescriptor[Long]("timerFlagState", classOf[Long]))
+
+        override def processElement(value: String, ctx: KeyedProcessFunction[String, String, String]#Context, out: Collector[String]): Unit = {
+          valueState.update(valueState.value() + 1)
+
+          if (timerFlagState.value() == 0L) {
+            ctx.timerService().registerEventTimeTimer(ctx.timestamp() + 1000 * 2)
+            timerFlagState.update(ctx.timestamp() + 1000 * 2)
+          }
+        }
+
+        override def onTimer(timestamp: Long, ctx: KeyedProcessFunction[String, String, String]#OnTimerContext, out: Collector[String]): Unit = {
+          super.onTimer(timestamp, ctx, out)
+          out.collect(valueState.value().toString)
+          timerFlagState.clear()
+        }
+      })
+      .print()
+
+    env.execute()
+  }
+
+  def flinkProcessKeyedWindowFunctionUsing(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env
+      .addSource(new SourceFunction[String] {
+        private var index = 0
+        private val list = Array("alan", "adam", "jane", "jack")
+
+        override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
+          while (true) {
+            ctx.collect(list(index))
+            index += 1
+            if (index >= list.length) index = 0
+            TimeUnit.MILLISECONDS.sleep(500L)
+          }
+        }
+
+        override def cancel(): Unit = ???
+      })
+      .map(x => (x, System.currentTimeMillis()))
+      .assignAscendingTimestamps(_._2)
+
+    val A: OutputTag[(String, Long)] = OutputTag[(String, Long)]("A")
+    val B: OutputTag[String] = OutputTag[String]("B")
+    val dataStream1: DataStream[(String, Long)] = dataStream.process(new ProcessFunction[(String, Long), (String, Long)] {
+      override def processElement(value: (String, Long), ctx: ProcessFunction[(String, Long), (String, Long)]#Context, out: Collector[(String, Long)]): Unit = {
+        if (value._2 % 2 == 0) {
+          ctx.output(A, value)
+        } else {
+          ctx.output(B, value._1)
+        }
+
+        out.collect(value)
+      }
+    })
+
+    val a: DataStream[(String, Long)] = dataStream1.getSideOutput(A)
+    val b: DataStream[String] = dataStream1.getSideOutput(B)
+    val connectedStreams: ConnectedStreams[(String, Long), String] = a.connect(b)
+    connectedStreams.map(x => x._1, x => x).print("AB")
+
+    env.execute()
+  }
+
+  def flinkProcessAllWindowFunctionUsing(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env
+      .addSource(new SourceFunction[String] {
+      private var index = 0
+      private val list = Array("alan", "adam", "jane", "jack")
+
+      override def run(ctx: SourceFunction.SourceContext[String]): Unit = {
+        while (true) {
+          ctx.collect(list(index))
+          index += 1
+          if (index >= list.length) index = 0
+          TimeUnit.MILLISECONDS.sleep(500L)
+        }
+      }
+
+      override def cancel(): Unit = ???
+    })
+      .map(x => (x, System.currentTimeMillis()))
+      .assignAscendingTimestamps(_._2)
+
+    dataStream
+      .windowAll(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(5)))
+      .process(new ProcessAllWindowFunction[(String, Long), String, TimeWindow] {
+        override def process(context: Context, elements: Iterable[(String, Long)], out: Collector[String]): Unit = {
+          val hashMap: mutable.HashMap[String, Long] = mutable.HashMap.empty[String, Long]
+          elements.map(_._1).foreach(x => {
+            hashMap.get(x) match {
+              case Some(count) => hashMap.put(x, count + 1)
+              case None => hashMap.put(x, 1)
+            }
+          })
+
+          val list: List[(String, Long)] = hashMap.toList.sortBy(_._2).reverse.take(2)
+          val result: StringBuilder = new StringBuilder()
+          result.append(s"=================== window: ${context.window.getStart} -> ${context.window.getEnd} ================== \n")
+          list.indices.foreach(index => {
+            result
+              .append(s"top: ${index + 1} ")
+              .append(s"name: ${list(index)._1} ")
+              .append(s"browser number: ${list(index)._2} \n")
+          })
+          out.collect(result.toString())
+        }
+      })
+      .print()
+    env.execute()
+  }
+
+  def flinkWindowUsing(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env.addSource(new SourceFunction[(String, Long)] {
+      override def run(ctx: SourceFunction.SourceContext[(String, Long)]): Unit = {
+        val array: Array[String] = Array("alan", "adam", "jack", "jane")
+        while (true) {
+          ctx.collect((array(Random.nextInt(4)), System.currentTimeMillis()))
+          TimeUnit.MILLISECONDS.sleep(100L)
+        }
+      }
+
+      override def cancel(): Unit = ???
+    })
+    dataStream.assignTimestampsAndWatermarks(
+      WatermarkStrategy.forBoundedOutOfOrderness[(String, Long)](Duration.ofSeconds(5))
+        .withTimestampAssigner(new SerializableTimestampAssigner[(String, Long)] {
+          override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = element._2
+        })
+    ).keyBy(_._1)
+      .window(TumblingEventTimeWindows.of(Time.seconds(5)))
+      .reduce((x, y) => (x._1, x._2 + y._2))
+      .print()
+
+    env.execute()
+  }
+
+  def flinkCustomWatermarkGenerateStragegy(args: Array[String]): Unit = {
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.getConfig.setAutoWatermarkInterval(100L)
+    env.setParallelism(1)
+    val dataStream: DataStream[(String, Long)] = env.addSource(new SourceFunction[(String, Long)] {
+      override def run(ctx: SourceFunction.SourceContext[(String, Long)]): Unit = {
+        val array: Array[String] = Array("alan", "adam", "jack", "jane")
+        while (true) {
+          ctx.collect((array(Random.nextInt(4)), System.currentTimeMillis()))
+          TimeUnit.MILLISECONDS.sleep(100L)
+        }
+      }
+
+      override def cancel(): Unit = {}
+    })
+    dataStream.assignTimestampsAndWatermarks(new WatermarkStrategy[(String, Long)] {
+      override def createTimestampAssigner(context: TimestampAssignerSupplier.Context): TimestampAssigner[(String, Long)] = {
+        super.createTimestampAssigner(context)
+        new SerializableTimestampAssigner[(String, Long)] {
+          override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = element._2
+        }
+      }
+
+      override def createWatermarkGenerator(context: WatermarkGeneratorSupplier.Context): WatermarkGenerator[(String, Long)] = {
+        new WatermarkGenerator[(String, Long)] {
+          private var delay: Long = TimeUnit.SECONDS.toMillis(5)
+          private var maxWatermark: Long = Long.MinValue + delay + 1
+
+          override def onEvent(event: (String, Long), eventTimestamp: Long, output: WatermarkOutput): Unit = {
+            maxWatermark = math.max(maxWatermark, event._2)
+          }
+
+          override def onPeriodicEmit(output: WatermarkOutput): Unit = {
+            val watermark: Watermark = new Watermark(maxWatermark - delay - 1)
+            output.emitWatermark(watermark)
+          }
+        }
+      }
+    })
+    env.execute()
   }
 
   def flinkGenerateWaterMark(array: Array[String]): Unit = {
@@ -121,9 +418,7 @@ object Demo {
     dataStream.assignTimestampsAndWatermarks(
       WatermarkStrategy.forBoundedOutOfOrderness[(String, Long)](Duration.ofSeconds(5))
         .withTimestampAssigner(new SerializableTimestampAssigner[(String, Long)] {
-          override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = {
-            element._2
-          }
+          override def extractTimestamp(element: (String, Long), recordTimestamp: Long): Long = element._2
         })
     ).print()
     env.execute()

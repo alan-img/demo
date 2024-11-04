@@ -29,7 +29,8 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
     // zk的监听县城时守护线程 当所有非守护线程全部运行结束时 JVM会将所有的守护线程退出 最终退出JVM
-    listenNodeDataChange()
+    // listenNodeDataChange()
+    listenNodePathChange()
   }
 
   def listenNodeDataChange(): Unit ={

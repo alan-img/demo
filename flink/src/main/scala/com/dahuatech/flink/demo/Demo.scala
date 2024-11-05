@@ -35,7 +35,7 @@ import java.util
 import java.util.Properties
 import java.util.concurrent.TimeUnit
 import scala.collection.mutable
-import scala.sys.env
+import scala.sys.{env, props}
 import scala.util.Random
 
 /**
@@ -52,6 +52,10 @@ import scala.util.Random
 object Demo {
   val log = LoggerFactory.getLogger(getClass)
 
+  // 获取本地监控环境
+  // val conf = new Configuration()
+  // conf.setString(RestOptions.BIND_PORT, "8080")
+  // val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf)
   def main(args: Array[String]): Unit = {
 
     // val conf = new Configuration()
@@ -73,8 +77,44 @@ object Demo {
     // flinkConnectAPIUsing(args)
     // flinkCheckPointUsing(args)
     // flinkSQLUsaging(args)
-    flinkSQLInputOutputData(args)
+    // flinkSQLInputOutputData(args)
 
+    val conf = new Configuration()
+    conf.setString(RestOptions.BIND_PORT, "8080")
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf)
+    env.setParallelism(3)
+
+    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
+    val properties: Properties = getKafkaProperties()
+    val kafkaDataStream: DataStream[String] = env.addSource(
+      new FlinkKafkaConsumer[String](parameterTool.get("topic.name", "first"),
+        new SimpleStringSchema(),
+        properties)
+    ).name("first")
+    kafkaDataStream.map(new RichMapFunction[String, String] {
+      override def map(value: String): String = {
+        println(getRuntimeContext.getTaskName)
+        println(getRuntimeContext.getIndexOfThisSubtask)
+        println(getRuntimeContext.getTaskNameWithSubtasks)
+        println(getRuntimeContext.getNumberOfParallelSubtasks)
+        println(getRuntimeContext.getMaxNumberOfParallelSubtasks)
+        value
+      }
+    }).addSink(
+      new FlinkKafkaProducer[String]("hadoop101:9092,hadoop102:9092,hadoop103:9092", "second", new SimpleStringSchema())
+    ).name("second")
+    env.execute()
+
+  }
+
+  def getKafkaProperties(): Properties = {
+    val properties: Properties = new Properties()
+    properties.setProperty("bootstrap.servers", "hadoop101:9092,hadoop102:9092,hadoop103:9092")
+    properties.setProperty("group.id", "flink.kafka.consumer.group")
+    properties.setProperty("key.deserializer", classOf[StringDeserializer].getName)
+    properties.setProperty("value.deserializer", classOf[StringDeserializer].getName)
+    properties.setProperty("auto.offset.reset", "latest")
+    properties
   }
 
   def flinkSQLInputOutputData(args: Array[String]): Unit = {
@@ -647,12 +687,7 @@ object Demo {
   def fromKafkaReadData(args: Array[String]): Unit = {
     val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-    val properties: Properties = new Properties()
-    properties.setProperty("bootstrap.servers", "hadoop101:9092,hadoop102:9092,hadoop103:9092")
-    properties.setProperty("group.id", "flink.kafka.consumer.group")
-    properties.setProperty("key.deserializer", classOf[StringDeserializer].getName)
-    properties.setProperty("value.deserializer", classOf[StringDeserializer].getName)
-    properties.setProperty("auto.offset.reset", "latest")
+    val properties: Properties = getKafkaProperties()
     val kafkaDataStream: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String](parameterTool.get("topic.name", "first"), new SimpleStringSchema(), properties))
     kafkaDataStream.print()
     env.execute()

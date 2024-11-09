@@ -80,53 +80,37 @@ object Demo {
     // flinkSQLInputOutputData(args)
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-
-    val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
-    val properties: Properties = getKafkaProperties()
-    val kafkaDataStream: DataStream[String] = env.addSource(
-      new FlinkKafkaConsumer[String](
-        parameterTool.get("topic.name", "first"),
-        new SimpleStringSchema(),
-        properties
-      )
-    ).name("first")
-    kafkaDataStream
-      .map(new RichMapFunction[String, String] {
-      override def map(value: String): String = {
-        println(getRuntimeContext.getTaskName)
-        println(getRuntimeContext.getIndexOfThisSubtask)
-        println(getRuntimeContext.getTaskNameWithSubtasks)
-        println(getRuntimeContext.getNumberOfParallelSubtasks)
-        println(getRuntimeContext.getMaxNumberOfParallelSubtasks)
-        value
-      }
-    }).keyBy(x => x)
-        .window(TumblingProcessingTimeWindows.of(Time.of(5, TimeUnit.SECONDS)))
-        .process(new ProcessWindowFunction[String, String, String, TimeWindow] {
-          override def process(key: String, context: Context, elements: Iterable[String], out: Collector[String]): Unit = {
-            elements.foreach(out.collect(_))
-          }
-        })
-      .addSink(
-      new FlinkKafkaProducer[String](
-        "hadoop101:9092,hadoop102:9092,hadoop103:9092",
-        "second",
-        new SimpleStringSchema()
-      )
-    ).name("second")
-    // val dataStream: DataStream[String] = env.socketTextStream("hadoop101", 9999)
-    // dataStream
-    //   .map(x => x)
-    //   .keyBy(x => x)
-    //   .window(TumblingProcessingTimeWindows.of(Time.of(5, TimeUnit.SECONDS)))
-    //   .process(new ProcessWindowFunction[String, String, String, TimeWindow] {
-    //     override def process(key: String, context: Context, elements: Iterable[String], out: Collector[String]): Unit = {
-    //       elements.foreach(out.collect(_))
-    //     }
-    //   })
-    //   .print()
-
+    val dataStream: DataStream[String] = env.socketTextStream("hadoop101", 9999)
+    dataStream
+      .map(x => x)
+      .print()
     env.execute()
+
+    // val conf = new Configuration()
+    // conf.setString(RestOptions.BIND_PORT, "8080")
+    // val env: StreamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf)
+    // env.setParallelism(3)
+    //
+    // val parameterTool: ParameterTool = ParameterTool.fromArgs(args)
+    // val properties: Properties = getKafkaProperties()
+    // val kafkaDataStream: DataStream[String] = env.addSource(
+    //   new FlinkKafkaConsumer[String](parameterTool.get("topic.name", "first"),
+    //     new SimpleStringSchema(),
+    //     properties)
+    // ).name("first")
+    // kafkaDataStream.map(new RichMapFunction[String, String] {
+    //   override def map(value: String): String = {
+    //     println(getRuntimeContext.getTaskName)
+    //     println(getRuntimeContext.getIndexOfThisSubtask)
+    //     println(getRuntimeContext.getTaskNameWithSubtasks)
+    //     println(getRuntimeContext.getNumberOfParallelSubtasks)
+    //     println(getRuntimeContext.getMaxNumberOfParallelSubtasks)
+    //     value
+    //   }
+    // }).addSink(
+    //   new FlinkKafkaProducer[String]("hadoop101:9092,hadoop102:9092,hadoop103:9092", "second", new SimpleStringSchema())
+    // ).name("second")
+    // env.execute()
 
   }
 

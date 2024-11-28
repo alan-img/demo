@@ -19,6 +19,8 @@ message Response {
   repeated Student student = 1;
 }
 
-service InterfaceService {
-  rpc get(Request) returns (Response);
+service rpc {
+  rpc once(Request) returns (Response) {};
+
+  rpc stream(stream Request) returns (stream Response) {};
 }

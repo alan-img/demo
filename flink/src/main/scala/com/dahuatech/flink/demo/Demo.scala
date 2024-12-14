@@ -80,6 +80,24 @@ object Demo {
     // flinkSQLInputOutputData(args)
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+
+    val inputKafakDataStream: DataStream[String] = env.addSource(
+      new FlinkKafkaConsumer[String]("first", new SimpleStringSchema(), getKafkaProperties())
+    ).name("first").slotSharingGroup("alan")
+
+    val outputDataStream: DataStream[String] = inputKafakDataStream
+      .keyBy(x => x)
+      .window(TumblingProcessingTimeWindows.of(Time.of(5, TimeUnit.SECONDS)))
+      .process(new ProcessWindowFunction[String, String, String, TimeWindow] {
+        override def process(key: String, context: Context, elements: Iterable[String], out: Collector[String]): Unit = {
+          elements.foreach(out.collect(_))
+        }
+      }).name("transform").slotSharingGroup("alan")
+
+    outputDataStream.addSink(
+      new FlinkKafkaProducer[String]("hadoop101:9092,hadoop102:9092,hadoop103:9092", "second", new SimpleStringSchema())
+    ).name("second")
+
     val dataStream: DataStream[String] = env.socketTextStream("hadoop101", 9999)
     dataStream
       .map(x => x)

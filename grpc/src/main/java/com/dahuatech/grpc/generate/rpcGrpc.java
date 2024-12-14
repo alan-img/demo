@@ -19,162 +19,194 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.2.0)",
-    comments = "Source: interface.proto")
-public final class InterfaceServiceGrpc {
+    comments = "Source: rpc.proto")
+public final class rpcGrpc {
 
-  private InterfaceServiceGrpc() {}
+  private rpcGrpc() {}
 
-  public static final String SERVICE_NAME = "com.dahuatech.grpc.InterfaceService";
+  public static final String SERVICE_NAME = "com.dahuatech.grpc.rpc";
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<com.dahuatech.grpc.generate.Request,
-      com.dahuatech.grpc.generate.Response> METHOD_GET =
+      com.dahuatech.grpc.generate.Response> METHOD_ONCE =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "com.dahuatech.grpc.InterfaceService", "get"),
+              "com.dahuatech.grpc.rpc", "once"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.dahuatech.grpc.generate.Request.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.dahuatech.grpc.generate.Response.getDefaultInstance()));
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<com.dahuatech.grpc.generate.Request,
+      com.dahuatech.grpc.generate.Response> METHOD_STREAM =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING,
+          generateFullMethodName(
+              "com.dahuatech.grpc.rpc", "stream"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.dahuatech.grpc.generate.Request.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.dahuatech.grpc.generate.Response.getDefaultInstance()));
 
   /**
    * Creates a new async stub that supports all call types for the service
    */
-  public static InterfaceServiceStub newStub(io.grpc.Channel channel) {
-    return new InterfaceServiceStub(channel);
+  public static rpcStub newStub(io.grpc.Channel channel) {
+    return new rpcStub(channel);
   }
 
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
-  public static InterfaceServiceBlockingStub newBlockingStub(
+  public static rpcBlockingStub newBlockingStub(
       io.grpc.Channel channel) {
-    return new InterfaceServiceBlockingStub(channel);
+    return new rpcBlockingStub(channel);
   }
 
   /**
    * Creates a new ListenableFuture-style stub that supports unary and streaming output calls on the service
    */
-  public static InterfaceServiceFutureStub newFutureStub(
+  public static rpcFutureStub newFutureStub(
       io.grpc.Channel channel) {
-    return new InterfaceServiceFutureStub(channel);
+    return new rpcFutureStub(channel);
   }
 
   /**
    */
-  public static abstract class InterfaceServiceImplBase implements io.grpc.BindableService {
+  public static abstract class rpcImplBase implements io.grpc.BindableService {
 
     /**
      */
-    public void get(com.dahuatech.grpc.generate.Request request,
+    public void once(com.dahuatech.grpc.generate.Request request,
         io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(METHOD_GET, responseObserver);
+      asyncUnimplementedUnaryCall(METHOD_ONCE, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Request> stream(
+        io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response> responseObserver) {
+      return asyncUnimplementedStreamingCall(METHOD_STREAM, responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-            METHOD_GET,
+            METHOD_ONCE,
             asyncUnaryCall(
               new MethodHandlers<
                 com.dahuatech.grpc.generate.Request,
                 com.dahuatech.grpc.generate.Response>(
-                  this, METHODID_GET)))
+                  this, METHODID_ONCE)))
+          .addMethod(
+            METHOD_STREAM,
+            asyncBidiStreamingCall(
+              new MethodHandlers<
+                com.dahuatech.grpc.generate.Request,
+                com.dahuatech.grpc.generate.Response>(
+                  this, METHODID_STREAM)))
           .build();
     }
   }
 
   /**
    */
-  public static final class InterfaceServiceStub extends io.grpc.stub.AbstractStub<InterfaceServiceStub> {
-    private InterfaceServiceStub(io.grpc.Channel channel) {
+  public static final class rpcStub extends io.grpc.stub.AbstractStub<rpcStub> {
+    private rpcStub(io.grpc.Channel channel) {
       super(channel);
     }
 
-    private InterfaceServiceStub(io.grpc.Channel channel,
+    private rpcStub(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected InterfaceServiceStub build(io.grpc.Channel channel,
+    protected rpcStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
-      return new InterfaceServiceStub(channel, callOptions);
+      return new rpcStub(channel, callOptions);
     }
 
     /**
      */
-    public void get(com.dahuatech.grpc.generate.Request request,
+    public void once(com.dahuatech.grpc.generate.Request request,
         io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_GET, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_ONCE, getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Request> stream(
+        io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response> responseObserver) {
+      return asyncBidiStreamingCall(
+          getChannel().newCall(METHOD_STREAM, getCallOptions()), responseObserver);
     }
   }
 
   /**
    */
-  public static final class InterfaceServiceBlockingStub extends io.grpc.stub.AbstractStub<InterfaceServiceBlockingStub> {
-    private InterfaceServiceBlockingStub(io.grpc.Channel channel) {
+  public static final class rpcBlockingStub extends io.grpc.stub.AbstractStub<rpcBlockingStub> {
+    private rpcBlockingStub(io.grpc.Channel channel) {
       super(channel);
     }
 
-    private InterfaceServiceBlockingStub(io.grpc.Channel channel,
+    private rpcBlockingStub(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected InterfaceServiceBlockingStub build(io.grpc.Channel channel,
+    protected rpcBlockingStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
-      return new InterfaceServiceBlockingStub(channel, callOptions);
+      return new rpcBlockingStub(channel, callOptions);
     }
 
     /**
      */
-    public com.dahuatech.grpc.generate.Response get(com.dahuatech.grpc.generate.Request request) {
+    public com.dahuatech.grpc.generate.Response once(com.dahuatech.grpc.generate.Request request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_GET, getCallOptions(), request);
+          getChannel(), METHOD_ONCE, getCallOptions(), request);
     }
   }
 
   /**
    */
-  public static final class InterfaceServiceFutureStub extends io.grpc.stub.AbstractStub<InterfaceServiceFutureStub> {
-    private InterfaceServiceFutureStub(io.grpc.Channel channel) {
+  public static final class rpcFutureStub extends io.grpc.stub.AbstractStub<rpcFutureStub> {
+    private rpcFutureStub(io.grpc.Channel channel) {
       super(channel);
     }
 
-    private InterfaceServiceFutureStub(io.grpc.Channel channel,
+    private rpcFutureStub(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected InterfaceServiceFutureStub build(io.grpc.Channel channel,
+    protected rpcFutureStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
-      return new InterfaceServiceFutureStub(channel, callOptions);
+      return new rpcFutureStub(channel, callOptions);
     }
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.dahuatech.grpc.generate.Response> get(
+    public com.google.common.util.concurrent.ListenableFuture<com.dahuatech.grpc.generate.Response> once(
         com.dahuatech.grpc.generate.Request request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_GET, getCallOptions()), request);
+          getChannel().newCall(METHOD_ONCE, getCallOptions()), request);
     }
   }
 
-  private static final int METHODID_GET = 0;
+  private static final int METHODID_ONCE = 0;
+  private static final int METHODID_STREAM = 1;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final InterfaceServiceImplBase serviceImpl;
+    private final rpcImplBase serviceImpl;
     private final int methodId;
 
-    MethodHandlers(InterfaceServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(rpcImplBase serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -183,8 +215,8 @@ public final class InterfaceServiceGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_GET:
-          serviceImpl.get((com.dahuatech.grpc.generate.Request) request,
+        case METHODID_ONCE:
+          serviceImpl.once((com.dahuatech.grpc.generate.Request) request,
               (io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response>) responseObserver);
           break;
         default:
@@ -197,13 +229,16 @@ public final class InterfaceServiceGrpc {
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
+        case METHODID_STREAM:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.stream(
+              (io.grpc.stub.StreamObserver<com.dahuatech.grpc.generate.Response>) responseObserver);
         default:
           throw new AssertionError();
       }
     }
   }
 
-  private static final class InterfaceServiceDescriptorSupplier implements io.grpc.protobuf.ProtoFileDescriptorSupplier {
+  private static final class rpcDescriptorSupplier implements io.grpc.protobuf.ProtoFileDescriptorSupplier {
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
       return com.dahuatech.grpc.generate.Interface.getDescriptor();
@@ -215,12 +250,13 @@ public final class InterfaceServiceGrpc {
   public static io.grpc.ServiceDescriptor getServiceDescriptor() {
     io.grpc.ServiceDescriptor result = serviceDescriptor;
     if (result == null) {
-      synchronized (InterfaceServiceGrpc.class) {
+      synchronized (rpcGrpc.class) {
         result = serviceDescriptor;
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
-              .setSchemaDescriptor(new InterfaceServiceDescriptorSupplier())
-              .addMethod(METHOD_GET)
+              .setSchemaDescriptor(new rpcDescriptorSupplier())
+              .addMethod(METHOD_ONCE)
+              .addMethod(METHOD_STREAM)
               .build();
         }
       }

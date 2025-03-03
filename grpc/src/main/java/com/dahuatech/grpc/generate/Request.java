@@ -68,12 +68,12 @@ public  final class Request extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.dahuatech.grpc.generate.Interface.internal_static_com_dahuatech_grpc_Request_descriptor;
+    return com.dahuatech.grpc.generate.Rpc.internal_static_com_dahuatech_grpc_Request_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.dahuatech.grpc.generate.Interface.internal_static_com_dahuatech_grpc_Request_fieldAccessorTable
+    return com.dahuatech.grpc.generate.Rpc.internal_static_com_dahuatech_grpc_Request_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             com.dahuatech.grpc.generate.Request.class, com.dahuatech.grpc.generate.Request.Builder.class);
   }
@@ -278,12 +278,12 @@ public  final class Request extends
       com.dahuatech.grpc.generate.RequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.dahuatech.grpc.generate.Interface.internal_static_com_dahuatech_grpc_Request_descriptor;
+      return com.dahuatech.grpc.generate.Rpc.internal_static_com_dahuatech_grpc_Request_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.dahuatech.grpc.generate.Interface.internal_static_com_dahuatech_grpc_Request_fieldAccessorTable
+      return com.dahuatech.grpc.generate.Rpc.internal_static_com_dahuatech_grpc_Request_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               com.dahuatech.grpc.generate.Request.class, com.dahuatech.grpc.generate.Request.Builder.class);
     }
@@ -314,7 +314,7 @@ public  final class Request extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.dahuatech.grpc.generate.Interface.internal_static_com_dahuatech_grpc_Request_descriptor;
+      return com.dahuatech.grpc.generate.Rpc.internal_static_com_dahuatech_grpc_Request_descriptor;
     }
 
     public com.dahuatech.grpc.generate.Request getDefaultInstanceForType() {

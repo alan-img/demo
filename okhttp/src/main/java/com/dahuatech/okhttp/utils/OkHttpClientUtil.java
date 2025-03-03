@@ -38,16 +38,15 @@ public class OkHttpClientUtil {
             synchronized (OkHttpClientUtil.class) {
                 if (okHttpClient == null) {
                     okHttpClient = new OkHttpClient();
+                    // 跳过ssl认证(https)
+                    okHttpClient.setSslSocketFactory(getSSLSocketFactory());
+                    okHttpClient.setHostnameVerifier((s, sslSession) -> true);
                     // 设置连接超时时间
                     okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
                     // 设置读数据超时时间
                     okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
                     // 设置写数据超时时间
                     okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
-                    // 跳过ssl认证(https)
-                    TrustManager[] trustManagers = buildTrustManagers();
-                    okHttpClient.setSslSocketFactory(createSSLSocketFactory(trustManagers));
-                    okHttpClient.setHostnameVerifier((hostName, session) -> true);
                     okHttpClient.setRetryOnConnectionFailure(true);
                     // 设置连接池  最大连接数量  , 持续存活的连接
                     okHttpClient.setConnectionPool(new ConnectionPool(5, 5, TimeUnit.MINUTES));
@@ -61,15 +60,14 @@ public class OkHttpClientUtil {
     /**
      * 获取SSLSocketFactory实例
      *
-     * @param trustAllCerts
      * @return
      */
-    private static SSLSocketFactory createSSLSocketFactory(TrustManager[] trustAllCerts) {
+    private static SSLSocketFactory getSSLSocketFactory() {
         SSLSocketFactory sslSocketFactory = null;
         try {
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new SecureRandom());
-            sslSocketFactory = sslContext.getSocketFactory();
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, new TrustManager[]{getX509TrustManager()}, new SecureRandom());
+            sslSocketFactory = sc.getSocketFactory();
         } catch (Exception exp) {
             exp.printStackTrace();
         }
@@ -77,26 +75,22 @@ public class OkHttpClientUtil {
     }
 
     /**
-     * 获取信息管理器TrustManager数组
-     *
      * @return
      */
-    private static TrustManager[] buildTrustManagers() {
-        return new TrustManager[]{
-                new X509TrustManager() {
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                    }
+    private static X509TrustManager getX509TrustManager() {
+        return new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+            }
 
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-                    }
+            @Override
+            public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+            }
 
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return new X509Certificate[0];
-                    }
-                }
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
         };
     }
 }

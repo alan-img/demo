@@ -1,3 +1,6 @@
 alan,10
 tom,20
 jack,30
+alan,10
+tom,20
+jack,30

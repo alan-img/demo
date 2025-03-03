@@ -1,5 +1,10 @@
 package com.dahuatech.demo;
 
+import com.dahuatech.bean.GenerateData;
+import com.dahuatech.flink.bean.RandomGenerateData;
+import org.apache.flink.streaming.api.scala.DataStream;
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment;
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.demo</p>

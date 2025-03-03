@@ -4,6 +4,7 @@ import com.dahuatech.spark.utils.SparkUtil
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.{SPARK_BRANCH, rdd}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 import org.apache.spark.util.LongAccumulator
 import org.slf4j.{Logger, LoggerFactory}
@@ -26,13 +27,14 @@ object SparkSubmitRemoteDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    val test: DataFrame = sparkSession.read.table("test")
-    val test1: DataFrame = sparkSession.read.table("test1")
+    val demo1: DataFrame = sparkSession.read.table("demo1")
+    val demo2: DataFrame = sparkSession.read.table("demo2")
 
-    val df: DataFrame = test.join(test1, test("dossier_id") === test1.col("dossierId"), "left_anti")
+    demo1.createOrReplaceTempView("demo1")
+    demo2.createOrReplaceTempView("demo2")
+
+    val df: DataFrame = demo1.join(demo2, Seq("name"), "left_anti")
     df.show()
-
-    println(df.count())
 
   }
 }

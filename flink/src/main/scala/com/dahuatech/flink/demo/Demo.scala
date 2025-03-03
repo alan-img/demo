@@ -79,6 +79,18 @@ object Demo {
     // flinkSQLUsaging(args)
     // flinkSQLInputOutputData(args)
 
+    // val conf = new Configuration()
+    // conf.setString(RestOptions.BIND_PORT, "8080")
+    //
+    // val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    // env.socketTextStream("hadoop102", 8888).flatMap(_.split(" ")).map((_, 1)).keyBy(_._1).sum(1).print()
+    // // env.readTextFile("hdfs://hadoop101:8020/input/derby.log").flatMap(_.split(" ")).map((_, 1)).keyBy(_._1).sum(1).print()
+    //
+    // env.execute()
+
+  }
+
+  def demo(): Unit = {
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
 
     val inputKafakDataStream: DataStream[String] = env.addSource(
@@ -99,7 +111,6 @@ object Demo {
     ).name("second")
 
     env.execute()
-
   }
 
   def getKafkaProperties(): Properties = {

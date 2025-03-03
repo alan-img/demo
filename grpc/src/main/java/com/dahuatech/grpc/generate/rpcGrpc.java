@@ -241,7 +241,7 @@ public final class rpcGrpc {
   private static final class rpcDescriptorSupplier implements io.grpc.protobuf.ProtoFileDescriptorSupplier {
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.dahuatech.grpc.generate.Interface.getDescriptor();
+      return com.dahuatech.grpc.generate.Rpc.getDescriptor();
     }
   }
 

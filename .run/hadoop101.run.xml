@@ -12,7 +12,7 @@
       </FilePath>
     </option>
     <option name="beforeShellScript" value="" />
-    <option name="className" value="com.dahuatech.spark.demo.SparkSubmitRemoteDemo" />
+    <option name="className" value="com.dahuatech.spark.demo.SparkIcebergDemo" />
     <option name="clusterManager" value="YARN" />
     <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties " />
     <option name="deployMode" value="CLUSTER" />

@@ -1,5 +1,6 @@
 package com.dahuatech.flink.demo
 
+import com.dahuatech.flink.util.FlinkUtils
 import org.apache.flink.api.scala.createTypeInformation
 import org.apache.flink.configuration.{Configuration, RestOptions}
 import org.apache.flink.streaming.api.functions.ProcessFunction

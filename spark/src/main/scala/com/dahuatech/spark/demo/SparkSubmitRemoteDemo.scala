@@ -27,14 +27,8 @@ object SparkSubmitRemoteDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    val demo1: DataFrame = sparkSession.read.table("demo1")
-    val demo2: DataFrame = sparkSession.read.table("demo2")
-
-    demo1.createOrReplaceTempView("demo1")
-    demo2.createOrReplaceTempView("demo2")
-
-    val df: DataFrame = demo1.join(demo2, Seq("name"), "left_anti")
-    df.show()
+    val df: DataFrame = sparkSession.read.table("local_test_table")
+    df.show
 
   }
 }

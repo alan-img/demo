@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秦加伟简历</title>
+    <style>
+        /* Light Blue Background Animation */
+        @keyframes wave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background: linear-gradient(135deg, #e6f2ff, #cce0ff, #b3d1ff, #99c2ff);
+            background-size: 300% 300%;
+            animation: wave 30s ease infinite;
+            min-height: 100vh;
+        }
+
+        /* Floating Bubbles Effect */
+        .bubble {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+
+        /* Resume Container */
+        .resume-container {
+            background-color: rgba(255, 255, 255, 0.92);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            padding: 40px;
+            max-width: 850px;
+            margin: 30px auto;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-left: 5px solid #4a90e2;
+            padding-left: 15px;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 20px;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            color: #2c3e50;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #357abd;
+            position: relative;
+            padding-left: 20px;
+            font-weight: 500;
+        }
+
+        h3:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: #4a90e2;
+            border-radius: 2px;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            margin-bottom: 20px;
+            color: #5a6a7e;
+            font-size: 16px;
+            background: rgba(74, 144, 226, 0.08);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #4a90e2;
+        }
+
+        /* Lists */
+        ul {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        li:before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        /* Job Info */
+        .job-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-size: 17px;
+        }
+
+        .job-period {
+            color: #6a7b8f;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: rgba(106, 123, 143, 0.1);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .section-content {
+            padding-left: 20px;
+            border-left: 1px dashed #c1d5f0;
+            margin-left: 10px;
+        }
+
+        /* Projects */
+        .project {
+            background: rgba(234, 242, 253, 0.5);
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #4a90e2;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.1);
+        }
+
+        .project h3 {
+            margin-top: 0;
+        }
+
+        /* Divider */
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #4a90e2, transparent);
+            margin: 25px 0;
+        }
+
+        /* Back to Top Button */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #4a90e2;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            background: #3a7bc8;
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .resume-container {
+                padding: 25px;
+                margin: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Resume Content -->
+<div class="resume-container">
+    <h1>Hello,I'm 秦加伟</h1>
+
+    <div class="contact-info">
+        男 | 电话：15551758022 | 微信：15551758022 | 邮箱：738437340@qq.com
+    </div>
+
+    <div class="section">
+        <h2>求职信息</h2>
+        <div class="section-content">
+            <p>工作时长：3年<br>
+                求职意向：数据仓库<br>
+                期望薪资：20-25K<br>
+                期望城市：杭州</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>教育经历</h2>
+        <div class="section-content">
+            <h3>安徽工业大学</h3>
+            <p>硕士<br>
+                计算机技术<br>
+                2019 - 2022</p>
+
+            <h3>马鞍山学院</h3>
+            <p>本科<br>
+                给排水科学与工程<br>
+                2014 - 2018</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="section">
+        <h2>个人优势</h2>
+        <div class="section-content">
+            <ul>
+                <li>1年离线数仓开发经验，2年实时数仓开发经验、掌握数仓分层原理(ODS/DWD/DWS/DWT/DIM/ADS)和方法论</li>
+                <li>熟练掌握Spark、Spark Streaming、Flink等主流计算引擎并解决常见Spark&Flink性能问题</li>
+                <li>熟悉数仓组件Hive和数据湖组件Iceberg、精通Hadoop生态组件HDFS、Yar n、ZK、Kafka、Redis、HBASE等</li>
+                <li>数量掌握SpringBoot、SpringCloud框架并用于开发后端接口</li>
+                <li>熟悉OLAP分析型数据库StarRocks、Doris等</li>
+                <li>熟悉常见任务调度框架Azkaban、oozie等</li>
+                <li>有K85+Docker部署经验，Helm包管理器使用经验</li>
+                <li>熟悉AI Agent智能体，了解CNN卷积神经网络和Yolo CV算法</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>工作经历</h2>
+        <div class="section-content">
+            <h3>浙江大华技术股份有限公司(上市)</h3>
+            <div class="job-title">大数据开发工程师(高级)</div>
+            <div class="job-period">2022.03-2025.03</div>
+            <ul>
+                <li>端到端开发并交付实时/离线数仓需求
+                    <ul>
+                        <li>1.1.独立负责从需求申请到最终交付的全流程开发工作，包括但不限于代码开发、自验、转测、修复缺陷等</li>
+                        <li>1.2.开发包括SparkSQL(Scala&SQL)离线和Flink(Scala&Java)实时任务等数仓需求，主要使用Hive、Iceberg、Hbase、Kafka、ZK、Redis等技术</li>
+                    </ul>
+                </li>
+                <li>工具开发与优化
+                    <ul>
+                        <li>2.1.开发并维护多台各档含档工具，优化离线含档模块的逻辑，放宽含档条件，提升含档效率与灵活性。</li>
+                        <li>2.2.针对现有工具和模块进行性能优化，提升数据处理效率，降低资源消耗。</li>
+                    </ul>
+                </li>
+                <li>任务维护与技术支持
+                    <ul>
+                        <li>3.1.负责维护已开发的Spark离线任务和Flink实时任务，确保其稳定运行。</li>
+                        <li>3.2.及时排查并解决任务运行过程中出现的异常问题，提供技术支持，保障业务的连续性。</li>
+                        <li>3.3.根据业务需求的变化，对现有任务进行迭代优化，确保其持续满足业务需求。</li>
+                    </ul>
+                </li>
+                <li>数仓任务巡检
+                    <ul>
+                        <li>4.1.负责巡检数仓各层(ODS/DWD/DWS/DWT/DIM/ADS)任务运行是否正常</li>
+                        <li>4.2.对于运行失败的任务及时排查原因并解决</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-content">
+            <ul>
+                <li>5、持续提升大数据软实力
+                    持续学习大数据领域的最新技术，探索并引入新的技术框架与工具并积极在团队内部落地，提升团队总体技术能力。</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>项目经历</h2>
+        <div class="section-content">
+            <div class="project">
+                <h3>分级聚档</h3>
+                <p><strong>角色:</strong> Flink开发负责人<br>
+                    <strong>时间:</strong> 2024.09-2025.03</p>
+                <p><strong>内容:</strong><br>
+                    该项目主要将下级的人脸数据通过kafka接入到分级聚档，分级先对数据进行实时提取特征（Flink实时任务），在将提取的特征根据特征相似度算法计算相似度，相似度大于98%以上的两个档案合并为同一个档案，最后经过sparkSQL离线任务进行数据关联，最终将数据发送到kafka并通过PostgreSQL接入任务接入到PostgreSQL提供其它系统使用<br>
+                    <strong>负责的主要内容:</strong> 在该项目中主要负责Flink实时特征重提任务，将发送过来的人脸和人体数据按照指定的字段Hash并对jobManagerNum取余，取余的结果进行keyBy，同时开启计时窗口（1205）和计数窗口（1600）触发计算，在窗口内经GRPC查询特征、调用http特征重提算法提取特征、JNA特征重推荐算法重推荐特征，最终将特征发送至下游</p>
+                <p><strong>业绩:</strong><br>
+                    解决了因keyBy导致的数据倾斜问题，解决后每个jobManager数据绝对均衡且长期稳定运行</p>
+            </div>
+
+            <div class="project">
+                <h3>人像实时数仓</h3>
+                <p><strong>角色:</strong> Flink流汇聚开发<br>
+                    <strong>时间:</strong> 2023.03-2025.03</p>
+                <p><strong>内容:</strong><br>
+                    该项目主要将ODS层的数据作为输入源，将上游分别发送到kafka的人脸抓拍(独立topic)和人体抓拍(独立topic)向下游分发，主要是根据人脸属性中的id列表关联人体，因为上游人脸人体数据到达的时间有延迟，需要指定一个延迟时间进行关联，能关联到的则关联，关联不到的就形成纯人脸或纯人体。<br>
+                    1、人脸消息主要业务逻辑：从kafka获取的人脸抓拍connect授权通道广播流，广播的通道用于过滤非法数据，合法子档经测输出流写入hbase子档表，纯人脸抓拍直接发送到人脸人体有效topic，非纯人脸经测输出流流转至下游用于关联人体抓拍。<br>
+                    2、人体消息主要业务逻辑：从kafka获取的人体抓拍connect授权通道广播流，纯人体子档直接发送人脸人体有效topic，非纯人体经测输出流流转至下游用于关联人脸。<br>
+                    3、非纯人脸和非纯人体业务逻辑：从测输出流取非纯人脸根据[id]connect非纯人体抓拍，通过KeyedCoProcessFunction来处理人脸人体关联关系，ListState[JSONObject]存储已经采集的人脸人体，通过ValueState[Int]存储理论可关联的人体数据，默认情况下人脸会等待关联的人体，人体也会等人脸，等待时间10分钟，如果已经等到全部的人体则提前触发，并删除定时器，如果没提前触发则能关联多少关联多少，关联不到的人脸或者人体修改为纯人脸或纯人体</p>
+                <p><strong>业绩:</strong></p>
+                <ul>
+                    <li>1、通过引入广播流实现动态的广播合法通道，确保增加的通道实时广播</li>
+                    <li>2、通过自定义KeyedCoProcessFunction处理函数来实现关联</li>
+                </ul>
+            </div>
+
+            <div class="project">
+                <h3>离线合档服务</h3>
+                <p><strong>角色:</strong> SpringBoot开发</p>
+                <p><strong>项目描述:</strong><br>
+                    该项目主要为SparkSQL离线任务提供Post档案合并接口，无状态服务，内部需根据发送过来的档案ID综合OC中存储的档案、Hbase存储的档案、是否存在链式合档以及是否实名决定是否可以合档，可以合档的情况下将档案发送至Kafka。</p>
+                <p><strong>主要逻辑:</strong> 接口内部需查询Hbase主档、Hbase子档、GPRC查询OC、都存在的情况下执行合档逻辑，由于有并发问题存在，可能存在在链式合档的问题（A+B->B,B+C->C），为了解决该问题引入Redisson分布式锁，在执行合并逻辑前对该案ID加分布式锁（锁粒度为档案ID）以解决该问题，该服务器采用云部署，具备根据负载情况动态扩缩的能力。</p>
+                <p><strong>技术栈:</strong> SpringBoot、Redisson分布式锁、Hbase、GRPC、Kafka、Docker + K8s</p>
+            </div>
+
+            <div class="project">
+                <h3>人像离线数仓</h3>
+                <p><strong>角色:</strong> SparkSQL开发</p>
+                <p><strong>项目描述:</strong><br>
+                    该项目主要将ODS层的数据经DWDBADIM处理后作为数据源输入，将新增的人脸批次档案发送到Kafka和HBase，将形成档案的所有子档发送Kafka和Hbase(不区分新增和更新)，更新质心表(生命周期永久)，对于新增的档案直接新增即可，对于更新的档案需要更新质心</p>
+                <p><strong>主要贡献:</strong></p>
+                <ul>
+                    <li><strong>1、通过引入Iceberg存储格式解决Hive无法高效的在行级别update/delete</strong><br>
+                        背景：质心表质心列存储多个质心(质心就是比较好的图片)，对于更新档案来说，每个批次有一些质心需要频繁更新和删除，但是对于Hive来说不支持(或支持不好)行级别更新或者删除操作。
+                        如果通过全量覆盖overwrite可以实现，但是数据量太大比较耗时<br>
+                        解决：通过引入Iceberg实现高效update/delete行级数据</li>
+                    <li><strong>2、解决因聚合导致的数据不均衡问题</strong><br>
+                        背景：档案表通过子档ID列表(表的一列)inner join批次的抓拍，如果某一个档案包含的子档过多，在explodeBitinner join子档在聚合就会出现这部分数据会被发送到一个task进行处理，而其它task处理的数据比较少，导致其它task很快处理完成，job因这个task运行而执行过慢<br>
+                        解决：在inner join后加随机前缀先进行一次聚合，聚合完成后去除随机前缀后在聚合，即两次聚合</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="floating-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">↑</button>
+
+<script>
+    // Create floating bubbles
+    function createBubbles() {
+        const colors = ['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.1)'];
+
+        for (let i = 0; i < 15; i++) {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+
+            // Random properties
+            const size = Math.random() * 60 + 20;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 10 + 10;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // Apply properties
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${posX}%`;
+            bubble.style.top = `${posY}%`;
+            bubble.style.background = color;
+            bubble.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+
+            // Add to body
+            document.body.appendChild(bubble);
+        }
+    }
+
+    // Initialize
+    window.onload = function() {
+        createBubbles();
+
+        // Add floating animation to bubbles
+        const style = document.createElement('style');
+        style.innerHTML = `
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) translateX(0); }
+                    25% { transform: translateY(-20px) translateX(10px); }
+                    50% { transform: translateY(-40px) translateX(0); }
+                    75% { transform: translateY(-20px) translateX(-10px); }
+                }
+            `;
+        document.head.appendChild(style);
+    };
+</script>
+</body>
+</html>

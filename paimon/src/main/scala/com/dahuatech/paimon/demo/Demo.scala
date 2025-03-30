@@ -1,5 +1,8 @@
 package com.dahuatech.paimon.demo
 
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.paimon.flink.PaimonDataStreamScanProvider
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.paimon.demo</p>
@@ -13,6 +16,9 @@ package com.dahuatech.paimon.demo
 
 object Demo {
   def main(args: Array[String]): Unit = {
+
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+
 
   }
 }

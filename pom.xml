@@ -327,7 +327,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven.jar.plugin.version}</version>
                 <configuration>
-                    <excludes></excludes>
                 </configuration>
             </plugin>
             <plugin>

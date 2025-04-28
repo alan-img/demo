@@ -2,8 +2,8 @@ package com.dahuatech.test.demo
 
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.collection.immutable.HashMap
-import scala.collection.parallel.immutable
+//import scala.collection.immutable.HashMap
+//import scala.collection.parallel.immutable
 
 /**
  * <p>projectName: demo</p>
@@ -39,7 +39,12 @@ object Demo {
 
   def main(args: Array[String]): Unit = {
 
-
+    test()
 
   }
+
+  def test(): Unit = {
+    println("alan")
+  }
+
 }

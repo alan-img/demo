@@ -31,7 +31,6 @@
         <module>flink</module>
         <module>rabbitmq</module>
         <module>flinkCDC</module>
-        <module>Paimon</module>
         <module>paimon</module>
     </modules>
     <name>demo project</name>

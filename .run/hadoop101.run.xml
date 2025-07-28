@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="hadoop101" type="SparkSubmitConfigurationType" factoryName="SshSparkJobConfigurationType" show_console_on_std_err="false" show_console_on_std_out="false">
-    <option name="allowRunningInParallel" value="false" />
+  <configuration default="false" name="hadoop101" type="SparkSubmitConfigurationType" factoryName="SshSparkJobConfigurationType" singleton="false" show_console_on_std_err="false" show_console_on_std_out="false">
+    <option name="allowRunningInParallel" value="true" />
     <option name="archives">
       <list />
     </option>
@@ -8,12 +8,13 @@
     <option name="artifactPath">
       <FilePath>
         <option name="path" value="$PROJECT_DIR$/spark/target/spark-jar-with-dependencies.jar" />
-        <option name="type" value="UPLOAD" />
+        <option name="type" value="upload" />
       </FilePath>
     </option>
     <option name="beforeShellScript" value="" />
-    <option name="className" value="com.dahuatech.spark.demo.SparkIcebergDemo" />
+    <option name="className" value="com.dahuatech.spark.demo.SparkSubmitRemoteDemo" />
     <option name="clusterManager" value="YARN" />
+    <option name="clusterManagerDeployModeDefault" value="true" />
     <option name="conf" value="spark.driver.extraJavaOptions=-Dlog4j.configuration=log4j.properties spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties " />
     <option name="deployMode" value="CLUSTER" />
     <option name="driverClassPath">
@@ -27,13 +28,13 @@
     <option name="driverMemory" value="1G" />
     <option name="envParams" value="" />
     <option name="excludePackages" value="" />
-    <option name="executorCores" value="3" />
-    <option name="executorMemory" value="3G" />
+    <option name="executorCores" value="1" />
+    <option name="executorMemory" value="1G" />
     <option name="files">
       <list>
         <FilePath>
           <option name="path" value="/root/spark-remote-home/log4j.properties" />
-          <option name="type" value="SERVER" />
+          <option name="type" value="server" />
         </FilePath>
       </list>
     </option>
@@ -44,7 +45,7 @@
     <option name="keytab">
       <FilePath>
         <option name="path" value="" />
-        <option name="type" value="CUSTOM" />
+        <option name="type" value="" />
       </FilePath>
     </option>
     <option name="master" value="local" />
@@ -55,7 +56,7 @@
     <option name="propertiesFile">
       <FilePath>
         <option name="path" value="" />
-        <option name="type" value="CUSTOM" />
+        <option name="type" value="" />
       </FilePath>
     </option>
     <option name="proxyUser" value="" />
@@ -70,25 +71,37 @@
     <option name="shellExecutor" value="/bin/bash" />
     <option name="sparkHome" value="/opt/mod/spark-3.0.0-bin-hadoop3.2" />
     <option name="sparkMonitoringDriverId" value="" />
-    <option name="sshConfigId" value="8392721c-8c7d-419e-836f-5a7320872e84" />
+    <option name="sshConfigId" value="ea6e751a-d48b-4203-9649-1c8c66022b85" />
     <option name="supervise" value="false" />
     <option name="targetDirectory">
       <FilePath>
         <option name="path" value="/root/spark-remote-home" />
-        <option name="type" value="SERVER" />
+        <option name="type" value="server" />
       </FilePath>
     </option>
     <option name="totalExecutorCores" value="" />
     <option name="verbose" value="false" />
+    <option name="visibleBlocks">
+      <map>
+        <entry key="SPARK_CONFIG" value="false" />
+        <entry key="DEPENDENCIES" value="false" />
+        <entry key="MAVEN_DEPENDENCIES" value="false" />
+        <entry key="DRIVER" value="true" />
+        <entry key="EXECUTOR" value="true" />
+        <entry key="KERBEROS" value="false" />
+        <entry key="INTEGRATION" value="false" />
+        <entry key="ADDITIONAL" value="false" />
+        <entry key="SHELL_OPTIONS" value="false" />
+      </map>
+    </option>
     <option name="workDirectoryPath">
       <FilePath>
         <option name="path" value="" />
-        <option name="type" value="SERVER" />
+        <option name="type" value="server" />
       </FilePath>
     </option>
     <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/spark/pom.xml" goal="clean package" />
-      <option name="SftpSparkFileUpload" enabled="true" />
+      <option name="SftpSparkFileUpload" enabled="false" />
     </method>
   </configuration>
 </component>

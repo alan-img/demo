@@ -1,7 +1,6 @@
 package com.dahuatech.spark.demo
 
 import com.dahuatech.spark.utils.SparkUtil
-import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.StringType
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -45,13 +44,12 @@ import org.slf4j.{Logger, LoggerFactory}
  * | **`fetchOffset.retryIntervalMs`** | 获取 offset 重试间隔                             | `1000`ms |
  * | **`minPartitions`**               | 读取时最小分区数，Kafka 分区数 < minPartitions 时拆分     | 无        |
  */
-object SparkLocalDemo {
+object SparkSessionReadKafkaDemo {
   private val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   def main(args: Array[String]): Unit = {
 
     val sparkSession = SparkUtil.getLocalSparkSession()
-    import sparkSession.implicits._
 
     val df = sparkSession.read
       .format("kafka")

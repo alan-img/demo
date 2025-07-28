@@ -22,7 +22,18 @@ import java.util.Scanner;
  */
 public class JavaDemo {
     public static void main(String[] args) throws IOException {
-        initEnv();
+        test();
+    }
+
+    public static void test() {
+        HbaseUtil hbaseUtil = new HbaseUtil();
+
+        byte[][] arr = Bytes.split(Bytes.toBytes(1), Bytes.toBytes(10), 2);
+
+        for (byte[] bytes : arr) {
+            System.out.println(Bytes.toString(bytes));
+        }
+
     }
 
     public static void initEnv() throws IOException {

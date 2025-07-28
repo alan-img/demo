@@ -58,8 +58,11 @@ object SparkSessionReadKafkaDemo {
       // 设置这个不会生效 并不会将消费的offset记录到kafka消费者组中管理 只能通过手动将offset记录到外部存储手动管理
       .option("kafka.group.id", "kafka_test_group")
       // -2表示某个分区最老的offset -1表示某个分区最新的数据 设置了startingOffsets每个分区的offset都要指明
-      .option("startingOffsets", "{\"first\":{\"0\":2,\"1\":-2,\"2\":-2}}")
-      .option("endingOffsets", "{\"first\":{\"0\":6,\"1\":-1,\"2\":-1}}") // 同上
+      .option("startingOffsets", "{\"first\":{\"0\":3,\"1\":-2,\"2\":-2}}")
+      // 同上
+      .option("endingOffsets", "{\"first\":{\"0\":6,\"1\":-1,\"2\":-1}}")
+      // startingOffsets越界后会报错 endingOffsets越界卡死 failOnDataLoss默认false表示不会报错
+      .option("failOnDataLoss", "false")
       .load()
 //      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)") // 将数据转为String类型
 //      .select($"value".cast(StringType), col("value").cast("String"), 'value.cast("String")) // 将数据转为String类型

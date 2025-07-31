@@ -3,6 +3,8 @@ package com.dahuatech.spark.demo
 import com.dahuatech.spark.utils.SparkUtil
 import org.slf4j.{Logger, LoggerFactory}
 
+import java.util.Properties
+
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech.spark.demo</p>
@@ -50,6 +52,7 @@ object SparkSessionReadMysqlDemo {
 
     val sparkSession = SparkUtil.getLocalSparkSession()
 
+    // 第一种方式 推荐使用
     val df = sparkSession.read
       .format("jdbc")
       .option("url", "jdbc:mysql://hadoop101:3306/demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8")
@@ -69,6 +72,26 @@ object SparkSessionReadMysqlDemo {
       .load()
 
     df.show(false)
+
+    // 第二种方式
+    val properties = new Properties()
+    properties.setProperty("user", "root")
+    properties.setProperty("password", "root")
+    properties.setProperty("driver", "com.mysql.jdbc.Driver")
+    properties.setProperty("url", "jdbc:mysql://hadoop101:3306/demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8")
+    properties.setProperty("fetchsize", "10000") // 一批取多少行
+
+    val df1 = sparkSession.read.jdbc(
+      properties.getProperty("url"),
+      "test",
+      "age",
+      1,
+      100000,
+      10,
+      properties
+    )
+
+    df1.show(false)
 
   }
 }

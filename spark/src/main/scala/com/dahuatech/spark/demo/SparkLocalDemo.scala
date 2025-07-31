@@ -53,21 +53,7 @@ object SparkLocalDemo {
     val sparkSession = SparkUtil.getLocalSparkSession()
     import sparkSession.implicits._
 
-    val df = sparkSession.read
-      .format("kafka")
-      .option("kafka.bootstrap.servers", "hadoop101:9092,hadoop102:9092,hadoop103:9092")
-      .option("subscribe", "first")
-      // 设置这个不会生效 并不会将消费的offset记录到kafka消费者组中管理 只能通过手动将offset记录到外部存储手动管理
-      .option("kafka.group.id", "kafka_test_group")
-      // -2表示某个分区最老的offset -1表示某个分区最新的数据 设置了startingOffsets每个分区的offset都要指明
-      .option("startingOffsets", "{\"first\":{\"0\":2,\"1\":-2,\"2\":-2}}")
-      .option("endingOffsets", "{\"first\":{\"0\":6,\"1\":-1,\"2\":-1}}") // 同上
-      .load()
-//      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)") // 将数据转为String类型
-//      .select($"value".cast(StringType), col("value").cast("String"), 'value.cast("String")) // 将数据转为String类型
-
-
-    df.select(df.col("value").cast(StringType)).show(false) // 将数据转为String类型
+    sparkSession.read.table("default.stu")
 
   }
 }

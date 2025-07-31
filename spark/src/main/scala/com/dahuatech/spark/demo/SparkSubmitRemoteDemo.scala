@@ -27,8 +27,25 @@ object SparkSubmitRemoteDemo {
     val sparkSession: SparkSession = SparkUtil.getSparkSession()
     import sparkSession.implicits._
 
-    val df: DataFrame = sparkSession.read.table("local_test_table")
-    df.show
+    val df = sparkSession.read
+      .format("jdbc")
+      .option("url", "jdbc:mysql://hadoop101:3306/demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8")
+      //      .option("dbtable", "(SELECT name, age FROM test) tmp") // 可写子查询，需加别名
+      .option("dbtable", "test") // 或者直接使用表名
+      .option("user", "root")
+      .option("password", "root")
+      .option("driver", "com.mysql.jdbc.Driver")
+      // --- 大表分区并行读取 ---
+      .option("partitionColumn", "age")       // 分区字段（整型/时间戳）
+      .option("lowerBound", "1")             // 最小值
+      .option("upperBound", "1000000")       // 最大值
+      .option("numPartitions", "20")         // 并行连接数
+      // --- 优化参数 ---
+      .option("fetchsize", "1000")           // 批次抓取行数
+      .option("queryTimeout", "300")         // 查询超时（秒）
+      .load()
+
+    println(df.count)
 
   }
 }

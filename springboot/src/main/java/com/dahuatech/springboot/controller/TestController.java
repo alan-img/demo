@@ -16,6 +16,11 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @Slf4j
 @RestController
@@ -57,6 +62,25 @@ public class TestController extends BaseController {
         String name = jsonObj.getString("name");
         Integer age = jsonObj.getInteger("age");
         return new Person(name, age);
+    }
+
+    @GetMapping("/weather/{city}")
+    public Map<String, String> getCityWeather(@PathVariable("city") String city) {
+        Map<String, String> result = new HashMap<>();
+
+        Random random = new Random();
+        String[] weathers = {
+                "阴", "晴", "多云", "小雨", "中雨", "大雨", "暴雨",
+                "阵雨", "雷阵雨", "小雪", "中雪", "大雪", "暴雪",
+                "雨夹雪", "阵雪", "雾", "霾", "扬沙", "浮尘",
+                "沙尘暴", "强沙尘暴", "冰雹", "台风", "龙卷风", "热带风暴"
+        };
+        result.put("city", city);
+        result.put("weather", weathers[random.nextInt(weathers.length)]);
+        result.put("temperature", random.nextInt(46) + "");
+        result.put("create_time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        return result;
     }
 
 }

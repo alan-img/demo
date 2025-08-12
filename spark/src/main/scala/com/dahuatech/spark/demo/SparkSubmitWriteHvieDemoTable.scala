@@ -20,7 +20,7 @@ import scala.collection.immutable
  * @version 1.0.0
  */
 
-object SparkSubmitWriteHvieDemoTable {
+object SparkSubmitWriteHiveDemoTable {
   private val log: Logger = LoggerFactory.getLogger(this.getClass)
 
   case class Demo(id: String, name: String, age: Long, city: String, province: String, dt: String)
@@ -36,7 +36,7 @@ object SparkSubmitWriteHvieDemoTable {
       .map(id => Demo(id.toString, generateRandomString(32), id, generateRandomString(32), generateRandomString(32), dt))
       .toDF("id", "name", "age", "city", "province", "dt")
 
-    df.write.mode(SaveMode.Overwrite).insertInto("demo")
+    df.write.mode(SaveMode.Append).insertInto("demo")
 
     val dt_minus_7 = LocalDate.now.minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 

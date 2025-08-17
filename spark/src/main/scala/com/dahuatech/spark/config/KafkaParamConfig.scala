@@ -34,7 +34,7 @@ object KafkaParamConfig {
     map
   }
 
-  val GROUP_ID_CONFIG = "kafka-consumer-group"
+  val GROUP_ID_CONFIG = "spark.kafka.consumer.group"
   val ENABLE_AUTO_COMMIT_CONFIG = "false" // 自动提交kafka消费者组offset
   val AUTO_COMMIT_INTERVAL_MS_CONFIG = "5000" // 默认5000ms
   val AUTO_OFFSET_RESET_CONFIG = "earliest" // 偏移量无效后自动将偏移量移动到最早 默认latest最新

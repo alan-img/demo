@@ -2,9 +2,6 @@ package com.dahuatech.test.demo
 
 import org.slf4j.{Logger, LoggerFactory}
 
-//import scala.collection.immutable.HashMap
-//import scala.collection.parallel.immutable
-
 /**
  * <p>projectName: demo</p>
  * <p>packageName: com.dahuatech</p>

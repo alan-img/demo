@@ -93,18 +93,18 @@ object SparkSubmitStreamDemo {
       })
 
     dStream.foreachRDD((batchRDD: RDD[WeatherInfo], batchTime: Time) => {
-      batchRDD.toDF().write.mode(SaveMode.Append).partitionBy("create_time").saveAsTable("weather_info")
+      batchRDD.toDF().write.mode(SaveMode.Append).partitionBy("create_time").saveAsTable("weather_data")
 
       val dt_minus_7 = LocalDate.now.minusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
       val partitionList = sparkSession.sql(
         """
-          |show partitions weather_info
+          |show partitions weather_data
           |""".stripMargin).collect().map(row => row.getString(0).split("=")(1))
       partitionList.foreach {
         partition =>
           println(s"partition: ${partition}")
           if (partition < dt_minus_7) {
-            sparkSession.sql(s"alter table weather_info drop partition(create_time = '${partition}')")
+            sparkSession.sql(s"alter table weather_data drop partition(create_time = '${partition}')")
           }
       }
 

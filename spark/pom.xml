@@ -19,6 +19,12 @@
         <iceberg.version>1.1.0</iceberg.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.apache.doris</groupId>
+            <artifactId>spark-doris-connector-spark-3.3</artifactId>
+            <version>25.1.0</version>
+        </dependency>
+
         <!-- 日志框架根据需要可选 [log4j] [logback] [log4j2] 默认使用log4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
